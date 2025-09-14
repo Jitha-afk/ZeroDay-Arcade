@@ -219,7 +219,17 @@ This landing site is intended for hosting on GitHub Pages using `next export` (c
 - Reference via root-relative path respecting `basePath`: when using `<img src="/images/foo.png" />` it becomes `${basePath}/images/foo.png` post-export.
 
 ### CI/CD Workflow
-- Ensure GitHub Action runs `npm run build` then publishes the `out/` directory to `gh-pages` branch (current action should mirror this—update if repo name changes).
+- Workflow file: `.github/workflows/deploy.yml`.
+- Steps summary:
+  1. Checkout & Node setup (Node 20)
+  2. Install deps via `npm ci`
+  3. Derive `BASE_PATH` from `GITHUB_REPOSITORY` and export to env
+  4. Build static site (`npm run build` with `output: 'export'`)
+  5. Optional debug listing of `out/` contents
+  6. Non-blocking Playwright smoke test run (failure does not stop deploy yet)
+  7. Create `.nojekyll` to allow `_next` assets
+  8. Upload artifact then deploy with `actions/deploy-pages`
+- Adjust to make E2E blocking by removing the `|| echo` fallback once test suite matures.
 - Clear old artifacts to avoid stale asset caching (set proper cache headers if using a CDN layer later).
 
 ### Feature Planning Under Static Constraints

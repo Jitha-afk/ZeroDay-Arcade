@@ -32,10 +32,31 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Build static site
+      - name: Derive base path
+        id: basepath
+        run: |
+          REPO_NAME=${GITHUB_REPOSITORY#*/}
+          echo "BASE_PATH=/$REPO_NAME" >> $GITHUB_ENV
+          echo "Base path set to /$REPO_NAME"
+
+      - name: Build static site (next export)
         run: npm run build
         env:
           NEXT_TELEMETRY_DISABLED: 1
+          BASE_PATH: ${{ env.BASE_PATH }}
+
+      - name: List output (debug)
+        run: |
+          ls -al out | head -50
+          echo "Base path: $BASE_PATH"
+
+      - name: Run E2E smoke tests (Playwright headless)
+        if: ${{ always() && !cancelled() }}
+        run: |
+          npx playwright install --with-deps
+          npm run test:e2e -- --reporter=line || echo "E2E tests failed (non-blocking for deploy)"
+        env:
+          BASE_PATH: ${{ env.BASE_PATH }}
 
       - name: Add .nojekyll (allow _next assets)
         run: touch out/.nojekyll
