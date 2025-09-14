@@ -1,22 +1,27 @@
 import { Card, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 
 const members = [
-  { name: 'Alex Doe', role: 'Founder' },
-  { name: 'Sam Lee', role: 'Designer' },
-  { name: 'Jordan Kim', role: 'Engineer' },
+  { name: 'Jitesh Thakur', roles: ['Sr. Security Engineer', 'Designer'] },
+  { name: 'Shalabh Pradhan', roles: ['GTM Manager - Security', 'Architect'] },
 ];
 
 export function Team() {
   return (
     <section className="container max-w-7xl py-24">
       <h2 className="mb-12 text-3xl font-bold tracking-tight">Our Team</h2>
-      <div className="grid gap-12 md:grid-cols-3">
+      <div className="grid gap-12 md:grid-cols-2">
         {members.map((member) => (
           <Card key={member.name} className="text-center">
-            <CardHeader className="items-center">
-              <div className="mb-4 h-24 w-24 rounded-full bg-gradient-to-br from-primary/20 via-secondary/20 to-accent/20 shadow" />
+            <CardHeader className="items-center space-y-2">
+              <div className="mb-2 h-24 w-24 rounded-full bg-gradient-to-br from-primary/20 via-secondary/20 to-accent/20 shadow" />
               <CardTitle>{member.name}</CardTitle>
-              <CardDescription>{member.role}</CardDescription>
+              <CardDescription>
+                <div className="flex flex-col gap-0.5">
+                  {member.roles.map((r) => (
+                    <span key={r}>{r}</span>
+                  ))}
+                </div>
+              </CardDescription>
             </CardHeader>
           </Card>
         ))}
