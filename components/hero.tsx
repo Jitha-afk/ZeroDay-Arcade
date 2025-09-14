@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from 'react';
+import { useLayoutEffect, useRef } from 'react';
 import { Button } from '@/components/ui/button';
 import { UnicornBackground } from '@/components/unicorn-background';
 import gsap from 'gsap';
@@ -8,81 +8,64 @@ import gsap from 'gsap';
 // Utility to split a phrase into word wrappers (overflow-hidden) and character spans.
 function SplitHeadline({
   text,
-  className = '',
-  wordClass = 'inline-block overflow-hidden',
-  charClass = 'inline-block will-change-transform',
   group = '',
+  charClass = 'inline-block will-change-transform',
 }: {
   text: string;
-  className?: string;
-  wordClass?: string;
-  charClass?: string;
   group?: string;
+  charClass?: string;
 }) {
   const words = text.split(' ');
   return (
-    <span className={className} aria-label={text} role="text">
+    <div aria-label={text} role="text" className="flex flex-wrap gap-x-2">
       {words.map((word, wi) => (
-        <span key={wi} className={wordClass} data-word>
+        <div
+          key={wi}
+          className="relative inline-block overflow-hidden"
+          data-word
+          style={{ lineHeight: '1.05' }}
+        >
           {word.split('').map((char, ci) => (
             <span
               key={ci}
               className={charClass}
               data-char
               data-group={group}
-              data-anim // marker for animation selection
+              data-anim
+              style={{ display: 'inline-block' }}
             >
               {char}
             </span>
           ))}
-          {wi < words.length - 1 && (
-            <span
-              className={charClass}
-              aria-hidden
-              data-char
-              data-group={group}
-              data-anim
-            >
-              {'\u00A0'}
-            </span>
-          )}
-        </span>
+          {wi < words.length - 1 && <span className="inline-block" style={{ width: '0.5ch' }} />}
+        </div>
       ))}
-    </span>
+    </div>
   );
 }
 
 export function Hero() {
   const rootRef = useRef<HTMLHeadingElement | null>(null);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (!rootRef.current) return;
-    // Respect reduced motion preferences.
-    const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     const chars = rootRef.current.querySelectorAll<HTMLElement>('[data-anim][data-group="headline"]');
-    if (!chars.length || prefersReduced) return;
+    if (!chars.length) return;
 
-    let ctx: gsap.Context | undefined;
-    try {
-      ctx = gsap.context(() => {
-        gsap.fromTo(
-          chars,
-          { yPercent: 115 },
-          {
-            yPercent: 0,
-            ease: 'power3.out',
-            duration: 0.75,
-            stagger: { each: 0.03, from: 0 },
-            overwrite: 'auto',
-            force3D: true,
-          }
-        );
-      }, rootRef);
-    } catch (e) {
-      // Fail gracefully: ensure characters are reset.
-      chars.forEach((c) => (c.style.transform = 'translateY(0)'));
-    }
-    return () => ctx?.revert();
+    const ctx = gsap.context(() => {
+      // Set initial off-screen position (below container)
+      gsap.set(chars, { yPercent: 120 });
+      // Animate upward with a subtle bounce (down then up feel)
+      gsap.to(chars, {
+        yPercent: 0,
+        ease: 'back.out(1.8)',
+        duration: 0.8,
+        stagger: { each: 0.035, from: 0 },
+        force3D: true,
+      });
+    }, rootRef);
+
+    return () => ctx.revert();
   }, []);
 
   return (
