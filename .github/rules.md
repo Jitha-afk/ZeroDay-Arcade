@@ -26,13 +26,17 @@ ZeroDay Arcade is a fluid, responsive landing experience for a cybersecurity war
 | Section Components (Features, Social Proof, Team, Contact) | ✅ | Included in page composition (content not yet domain-specific) |
 | Theme Provider | ✅ | Present in `layout.tsx` |
 | Base Typography & Layout Rhythm | ✅ | Using Tailwind defaults + container logic |
-| Placeholder for Interactive Background | ✅ | Element: `#unicorn-background-dev` absolute layer |
+| Placeholder for Interactive Background | ✅ | Element: `#unicorn-background-dev` absolute layer (now progressively enhanced) |
+| Unicorn Studio Background Injection | ✅ | Lazy client script injection via `components/unicorn-background.tsx` |
+| Dual Marquee Testimonials | ✅ | Two continuous opposing marquee rows (`<Testimonials />`) |
 
 ## 5. Pending / Backlog Ideas
 - Smooth scroll & scrollspy for nav (IntersectionObserver)
 - Active nav highlight underline / animated accent
 - Replace placeholder IDs with actual section anchor structure (#scenarios, #features, #leagues, #team, #contact)
-- Unicorn.studio embed integration (mount inside `#unicorn-background-dev`)
+- Scroll-triggered accent animations (GSAP optional) respecting `prefers-reduced-motion`
+- Pause / reduced-motion mode for marquee testimonials
+- Convert marquee duplication to data-driven content source
 - SEO metadata enhancements (Open Graph, structured data)
 - Add analytics & event instrumentation for CTA buttons
 - Lighthouse performance tuning (preload fonts, adjust critical CSS)
@@ -183,21 +187,84 @@ Avoid reliance on brittle DOM structure; add `data-testid` only if semantics ins
 - Review and pin third-party scripts; prefer lazy loading non-critical integrations.
 - Consider adding Content Security Policy (CSP) once external embeds (unicorn.studio) are integrated.
 
-## 21. Embedding Interactive Background (Planned)
-```tsx
-// Example future mount pattern
-useEffect(() => {
-  const mountEl = document.getElementById('unicorn-background-dev');
-  if (!mountEl) return;
-  // lazy import / injection here
-}, []);
-```
-Ensure layering does not capture pointer events unless required.
+## 21. Interactive Background (Unicorn Studio Integration)
+The interactive background is progressively enhanced. Core layering is preserved for users prior to script load.
+
+### Implementation Details
+- Container: `#unicorn-background-dev` (absolutely positioned, non-blocking) within the hero component.
+- Enhancement Component: `components/unicorn-background.tsx` (client-only) handles idempotent script injection.
+- Script Load Strategy: Injected once; guard ensures no duplicate global initialization. Consider deferring with `requestIdleCallback` or a user interaction heuristic if performance budgets tighten.
+- Fallback: Gradient / static background remains visible if script fails or is blocked.
+
+### Guidelines
+- Never allow the injected layer to intercept scroll or pointer events unless an explicit interactive mode is introduced (`pointer-events-none` maintained by default).
+- If future configuration is needed, wrap initialization in a promise-returning helper in `lib/unicorn.ts` and expose a small API surface.
+- Add an ADR if switching providers or expanding responsibilities (e.g., physics-based interaction, dynamic data overlays).
+
+### Performance Considerations
+- Monitor bundle size impact; external script should not block FCP.
+- Prefer lazy evaluation and bail early on reduced motion user preferences.
+
+### Accessibility
+- Decorative only; ensure `aria-hidden="true"` if DOM nodes become complex post-injection.
+
+## 22. Testimonials Marquee
+Dual-row, continuous marquee provides social proof.
+
+### Structure
+- Component: `components/testimonials.tsx`.
+- Two arrays duplicated to create seamless looping strips.
+- Opposing directional animations: top row leftward, bottom row rightward.
+
+### CSS & Animation
+- Keyframes defined in `app/globals.css`: `@keyframes marquee-left` and `@keyframes marquee-right`.
+- Utility classes: `.animate-marquee-left`, `.animate-marquee-right` applied per strip wrapper.
+- Uses linear infinite animation with duplicated content to avoid jump seams.
+
+### Guidelines
+- Keep content length balanced to avoid visible repetition cadence.
+- Consider content sourced from a structured JSON or headless CMS later.
+- Respect `prefers-reduced-motion`: future enhancement—swap animation classes with a static overflow-hidden scroll region or provide a manual toggle.
+- Pause-on-hover / focus is a possible accessibility enhancement (backlog item).
+
+### Performance Notes
+- Current duplication strategy is acceptable for small testimonial count. Monitor DOM size if scaling.
+- Consider virtualization or CSS mask effects if future theming demands more complex transitions.
+
+## 23. Animation & Motion Guidelines
+Use animation deliberately to reinforce comprehension or brand energy without overwhelming users.
+
+### Principles
+- Subtle > Flashy: Avoid high-frequency or large amplitude transforms on core layout elements.
+- Deterministic: Animations should not cause layout shift (avoid animating `width`/`height` when `transform` suffices).
+- Composited: Favor `transform` and `opacity` for GPU offloading.
+- Opt-Out Ready: Always design a reduced-motion fallback plan.
+
+### GSAP Usage
+- Dependency Added: `gsap` (see `package.json`). Use only for sequences or timelines that exceed the expressiveness or maintainability of pure CSS.
+- Keep instantiation inside `useEffect` with cleanup if referencing DOM nodes.
+- If building scroll-based triggers, gate them behind feature detection and user motion preferences (`window.matchMedia('(prefers-reduced-motion: reduce)')`).
+- Do not couple GSAP timelines directly to React state unless necessary; isolate in refs.
+
+### Reduced Motion Strategy (Planned)
+1. Detect user preference via media query.
+2. Provide conditional class toggle (e.g., disable marquee classes, skip heavy timelines).
+3. Maintain visual parity (static layout) even when animations are suppressed.
+
+### Testing Considerations
+- Add Playwright checks ensuring marquee markup renders (not necessarily motion) to avoid flakiness tied to animation timing.
+- Future: Add a test variant emulating reduced-motion to confirm fallbacks.
+
+## 24. Release Notes (Updated)
+Historical release notes moved here from earlier section numbering to accommodate new sections.
+
+- v0.1.0: Baseline navbar + hero + structural components scaffolded, design system primitives in place.
+- v0.2.0 (Unreleased): Unicorn Studio progressive background integration; dual marquee testimonial section; animation guidelines & GSAP dependency added; documentation expanded.
 
 ## 22. Release Notes (Initial)
 - v0.1.0: Baseline navbar + hero + structural components scaffolded, design system primitives in place.
 
-## 23. GitHub Pages Deployment (Static Export)
+## 25. GitHub Pages Deployment (Static Export)
 This landing site is intended for hosting on GitHub Pages using `next export` (configured via `output: 'export'` in `next.config.mjs`).
 
 ### Constraints & Considerations
