@@ -1,21 +1,56 @@
-import { RocketIcon, LockClosedIcon, LightningBoltIcon } from '@radix-ui/react-icons';
+import {
+  PersonIcon,
+  LightningBoltIcon,
+  LockClosedIcon,
+  LayersIcon,
+  ReloadIcon,
+  BarChartIcon,
+  RocketIcon,
+  GearIcon,
+} from '@radix-ui/react-icons';
 import { Card, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 
+// Product-specific capabilities reflecting the cybersecurity simulation platform.
 const features = [
   {
-    icon: RocketIcon,
-    title: 'Fast Setup',
-    description: 'Get up and running quickly with minimal configuration.',
-  },
-  {
-    icon: LockClosedIcon,
-    title: 'Secure by Default',
-    description: 'Built with security best practices to keep your data safe.',
+    icon: PersonIcon,
+    title: 'Role-Based Personas',
+    description: 'Play as CISO, Blue Team, Compliance, Legal and more for perspective-rich decision practice.',
   },
   {
     icon: LightningBoltIcon,
-    title: 'Blazing Performance',
-    description: 'Optimized for speed to deliver a snappy user experience.',
+    title: 'Real-Time Incident Rounds',
+    description: 'Fast, timed rounds simulate evolving attack chains requiring rapid prioritization.',
+  },
+  {
+    icon: GearIcon,
+    title: 'Adaptive Difficulty Engine',
+    description: 'System dynamically escalates complexity based on performance to keep mastery challenging.',
+  },
+  {
+    icon: LockClosedIcon,
+    title: 'Resource & Risk Management',
+    description: 'Balance budget, authority, reputation and control coverage under pressure.',
+  },
+  {
+    icon: ReloadIcon,
+    title: 'Replayable Scenarios',
+    description: 'Instant play with branching outcomes enables iterative skill refinement and comparison.',
+  },
+  {
+    icon: BarChartIcon,
+    title: 'Persona Scoring & Leaderboards',
+    description: 'Track specialized metrics per role plus global rankings to drive competitive learning.',
+  },
+  {
+    icon: LayersIcon,
+    title: 'Extensible Content Framework',
+    description: 'Add new threat modules, roles and industry variants without core rewrites.',
+  },
+  {
+    icon: RocketIcon,
+    title: 'Immediate Feedback & Debriefs',
+    description: 'Contextual post-round analysis highlights tradeoffs and missed countermeasures.',
   },
 ];
 
