@@ -17,11 +17,12 @@ function SplitHeadline({
   className?: string;
   wordClass?: string;
   charClass?: string;
-  group?: string; // data attribute group for selection
+  group?: string;
 }) {
+  const words = text.split(' ');
   return (
     <span className={className} aria-label={text} role="text">
-      {text.split(' ').map((word, wi) => (
+      {words.map((word, wi) => (
         <span key={wi} className={wordClass} data-word>
           {word.split('').map((char, ci) => (
             <span
@@ -29,19 +30,18 @@ function SplitHeadline({
               className={charClass}
               data-char
               data-group={group}
-              style={{ transform: 'translateY(115%)' }}
+              data-anim // marker for animation selection
             >
-              {char === ' ' ? '\u00A0' : char}
+              {char}
             </span>
           ))}
-          {/* Add a space after each word except last */}
-          {wi < text.split(' ').length - 1 && (
+          {wi < words.length - 1 && (
             <span
               className={charClass}
               aria-hidden
               data-char
               data-group={group}
-              style={{ transform: 'translateY(115%)' }}
+              data-anim
             >
               {'\u00A0'}
             </span>
@@ -57,23 +57,32 @@ export function Hero() {
 
   useEffect(() => {
     if (!rootRef.current) return;
-    const chars = rootRef.current.querySelectorAll<HTMLElement>('[data-char][data-group="headline"]');
-    if (!chars.length) return;
+    // Respect reduced motion preferences.
+    const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const chars = rootRef.current.querySelectorAll<HTMLElement>('[data-anim][data-group="headline"]');
+    if (!chars.length || prefersReduced) return;
 
-    const ctx = gsap.context(() => {
-      gsap.set(chars, { yPercent: 115 });
-      gsap.to(chars, {
-        yPercent: 0,
-        ease: 'power3.out',
-        duration: 0.8,
-        stagger: {
-          each: 0.035,
-          from: 0,
-        },
-      });
-    }, rootRef);
-
-    return () => ctx.revert();
+    let ctx: gsap.Context | undefined;
+    try {
+      ctx = gsap.context(() => {
+        gsap.fromTo(
+          chars,
+          { yPercent: 115 },
+          {
+            yPercent: 0,
+            ease: 'power3.out',
+            duration: 0.75,
+            stagger: { each: 0.03, from: 0 },
+            overwrite: 'auto',
+            force3D: true,
+          }
+        );
+      }, rootRef);
+    } catch (e) {
+      // Fail gracefully: ensure characters are reset.
+      chars.forEach((c) => (c.style.transform = 'translateY(0)'));
+    }
+    return () => ctx?.revert();
   }, []);
 
   return (
