@@ -2,23 +2,34 @@ import { Button } from '@/components/ui/button';
 
 export function Hero() {
   return (
-    <section className="container grid max-w-7xl items-center gap-6 py-24 md:grid-cols-2 md:gap-16">
-      <div className="flex flex-col gap-6">
-        <h1 className="text-4xl font-extrabold tracking-tight lg:text-5xl">
-          Launch Your Next Project
-        </h1>
-        <p className="text-lg text-muted-foreground">
-          Build stunning experiences with our toolkit of modern components and
-          utilities.
-        </p>
-        <div className="flex flex-col gap-4 sm:flex-row">
-          <Button size="lg">Get Started</Button>
-          <Button variant="secondary" size="lg">
-            Learn More
-          </Button>
+    <section
+      id="hero"
+      className="relative flex min-h-screen w-full flex-col"
+    >
+      {/* Background placeholder for future unicorn.studio interactive element */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-0 -z-10 overflow-hidden"
+      >
+        <div className="absolute inset-0 bg-gradient-to-br from-background via-background to-background" />
+        <div className="absolute inset-0 opacity-40 [mask-image:radial-gradient(circle_at_center,white,transparent)]" />
+        <div className="absolute inset-0" id="unicorn-background-dev" data-dev-note="Reserved for unicorn.studio interactive background" />
+      </div>
+
+      {/* Content container anchored bottom-left */}
+      <div className="flex flex-1 items-end">
+        <div className="mx-auto w-full max-w-[1400px] px-4 pb-24 sm:px-6 md:pb-32 lg:px-8">
+          <div className="max-w-3xl space-y-8">
+            <h1 className="text-balance font-extrabold tracking-tight text-4xl leading-[1.05] sm:text-5xl md:text-6xl lg:text-7xl">
+              <span className="block">ZeroDay Arcade,</span>
+              <span className="block text-primary">The Cyber Wargame Gauntlet</span>
+            </h1>
+            <div>
+              <Button size="lg">Try It Out</Button>
+            </div>
+          </div>
         </div>
       </div>
-      <div className="h-64 w-full rounded-2xl bg-gradient-to-br from-primary/20 via-secondary/20 to-accent/20 shadow-lg" />
     </section>
   );
 }
