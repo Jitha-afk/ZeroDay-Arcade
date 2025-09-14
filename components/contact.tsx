@@ -3,7 +3,7 @@ import { Button } from '@/components/ui/button';
 
 export function Contact() {
   return (
-    <section className="container max-w-7xl py-24">
+    <section className="container max-w-7xl py-32 snap-start">
       <h2 className="mb-12 text-3xl font-bold tracking-tight">Contact</h2>
       <Card className="mx-auto max-w-xl">
         <CardHeader>

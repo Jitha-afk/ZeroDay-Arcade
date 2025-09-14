@@ -70,7 +70,7 @@ export function Testimonials() {
   }, []);
 
   return (
-    <section ref={sectionRef} aria-label="Testimonials" className="relative w-full overflow-hidden py-24">
+    <section ref={sectionRef} aria-label="Testimonials" className="relative w-full overflow-hidden py-32 snap-start">
       <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-background via-background/50 to-background" />
       <div className="space-y-14">
         <div className="flex gap-6 animate-marquee-left will-change-transform" aria-hidden>

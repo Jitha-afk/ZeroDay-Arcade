@@ -7,7 +7,7 @@ const members = [
 
 export function Team() {
   return (
-    <section className="container max-w-7xl py-24">
+    <section className="container max-w-7xl py-32 snap-start">
       <h2 className="mb-12 text-3xl font-bold tracking-tight">Our Team</h2>
       <div className="grid gap-12 md:grid-cols-2">
         {members.map((member) => (

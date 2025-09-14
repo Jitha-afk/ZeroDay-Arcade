@@ -69,7 +69,7 @@ export function Hero() {
   }, []);
 
   return (
-    <section id="hero" className="relative flex min-h-screen w-full flex-col">
+  <section id="hero" className="relative flex min-h-screen w-full flex-col snap-start">
       {/* Background placeholder for future unicorn.studio interactive element */}
       <div aria-hidden className="absolute inset-0 -z-10 overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-br from-background via-background to-background" />

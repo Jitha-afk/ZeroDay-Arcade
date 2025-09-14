@@ -7,13 +7,25 @@ import { Testimonials } from '@/components/testimonials';
 
 export default function Page() {
   return (
-    <main>
-    <Hero />
-    <Testimonials />
-    <Team />
-    <Features />
-    <SocialProof />
-    <Contact />
+    <main className="min-h-screen w-full">
+      <div className="snap-start" id="hero-section">
+        <Hero />
+      </div>
+      <div className="snap-start" id="testimonials-section">
+        <Testimonials />
+      </div>
+      <div className="snap-start" id="team-section">
+        <Team />
+      </div>
+      <div className="snap-start" id="features-section">
+        <Features />
+      </div>
+      <div className="snap-start" id="social-proof-section">
+        <SocialProof />
+      </div>
+      <div className="snap-start" id="contact-section">
+        <Contact />
+      </div>
     </main>
   );
 }
