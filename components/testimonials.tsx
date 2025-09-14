@@ -71,9 +71,14 @@ export function Testimonials() {
     <section ref={sectionRef} aria-label="Testimonials" className="relative w-full overflow-hidden py-24">
       <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-background via-background/50 to-background" />
       <div className="space-y-14">
-        <div className="flex gap-6 flex-wrap" aria-hidden={false}>
-          {testimonials.map((t) => (
-            <Card key={`grid-${t.id}`} t={t} />
+        <div className="flex gap-6 animate-marquee-left will-change-transform" aria-hidden>
+          {loopA.map((t, i) => (
+            <Card key={`top-${t.id}-${i}`} t={t} />
+          ))}
+        </div>
+        <div className="flex gap-6 animate-marquee-right will-change-transform" aria-hidden>
+          {loopB.map((t, i) => (
+            <Card key={`bottom-${t.id}-${i}`} t={t} />
           ))}
         </div>
       </div>
