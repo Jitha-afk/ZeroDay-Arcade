@@ -1,4 +1,5 @@
 import { Button } from '@/components/ui/button';
+import { UnicornBackground } from '@/components/unicorn-background';
 
 export function Hero() {
   return (
@@ -7,13 +8,19 @@ export function Hero() {
       className="relative flex min-h-screen w-full flex-col"
     >
       {/* Background placeholder for future unicorn.studio interactive element */}
-      <div
-        aria-hidden
-        className="pointer-events-none absolute inset-0 -z-10 overflow-hidden"
-      >
+      <div aria-hidden className="absolute inset-0 -z-10 overflow-hidden">
+        {/* Gradient fallback */}
         <div className="absolute inset-0 bg-gradient-to-br from-background via-background to-background" />
         <div className="absolute inset-0 opacity-40 [mask-image:radial-gradient(circle_at_center,white,transparent)]" />
-        <div className="absolute inset-0" id="unicorn-background-dev" data-dev-note="Reserved for unicorn.studio interactive background" />
+        {/* Unicorn Studio Mount */}
+        <div id="unicorn-background-dev" className="absolute inset-0">
+          <div
+            data-us-project="RMMwnya8P7v2I9cvfWsa"
+            className="h-full w-full"
+            style={{ width: '100%', height: '100%' }}
+          />
+          <UnicornBackground />
+        </div>
       </div>
 
       {/* Content container anchored bottom-left */}
