@@ -2,55 +2,31 @@ import {
   PersonIcon,
   LightningBoltIcon,
   LockClosedIcon,
-  LayersIcon,
-  ReloadIcon,
   BarChartIcon,
-  RocketIcon,
-  GearIcon,
 } from '@radix-ui/react-icons';
 import { Card, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 
-// Product-specific capabilities reflecting the cybersecurity simulation platform.
+// Consolidated into four key pillars.
 const features = [
   {
     icon: PersonIcon,
-    title: 'Role-Based Personas',
-    description: 'Play as CISO, Blue Team, Compliance, Legal and more for perspective-rich decision practice.',
+    title: 'Multi-Role Simulation',
+    description: 'Play as CISO, Blue Team, Compliance or Legal across branching attack narratives for perspective-rich decisions.',
   },
   {
     icon: LightningBoltIcon,
-    title: 'Real-Time Incident Rounds',
-    description: 'Fast, timed rounds simulate evolving attack chains requiring rapid prioritization.',
-  },
-  {
-    icon: GearIcon,
-    title: 'Adaptive Difficulty Engine',
-    description: 'System dynamically escalates complexity based on performance to keep mastery challenging.',
+    title: 'Dynamic Incident Engine',
+    description: 'Timed evolving rounds with adaptive difficulty and replayable branches keep challenge and mastery in sync.',
   },
   {
     icon: LockClosedIcon,
-    title: 'Resource & Risk Management',
-    description: 'Balance budget, authority, reputation and control coverage under pressure.',
-  },
-  {
-    icon: ReloadIcon,
-    title: 'Replayable Scenarios',
-    description: 'Instant play with branching outcomes enables iterative skill refinement and comparison.',
+    title: 'Risk & Resource Strategy',
+    description: 'Balance budget, control coverage, authority and reputation under pressure to mitigate cascading impact.',
   },
   {
     icon: BarChartIcon,
-    title: 'Persona Scoring & Leaderboards',
-    description: 'Track specialized metrics per role plus global rankings to drive competitive learning.',
-  },
-  {
-    icon: LayersIcon,
-    title: 'Extensible Content Framework',
-    description: 'Add new threat modules, roles and industry variants without core rewrites.',
-  },
-  {
-    icon: RocketIcon,
-    title: 'Immediate Feedback & Debriefs',
-    description: 'Contextual post-round analysis highlights tradeoffs and missed countermeasures.',
+    title: 'Analytics & Feedback Loop',
+    description: 'Persona scoring, leaderboards and fast debrief insights highlight tradeoffs and skill growth paths.',
   },
 ];
 
@@ -58,7 +34,7 @@ export function Features() {
   return (
     <section className="container max-w-7xl py-24">
       <h2 className="mb-12 text-3xl font-bold tracking-tight">Features</h2>
-      <div className="grid gap-12 md:grid-cols-3">
+  <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-4">
         {features.map(({ icon: Icon, title, description }) => (
           <Card key={title} className="">
             <CardHeader>

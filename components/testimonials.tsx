@@ -46,22 +46,24 @@ export function Testimonials() {
   useLayoutEffect(() => {
     gsap.registerPlugin(ScrollTrigger);
     if (!sectionRef.current) return;
-    const cards = sectionRef.current.querySelectorAll<HTMLElement>('.testimonial-card');
-    if (!cards.length) return;
+    const topRow = sectionRef.current.querySelectorAll<HTMLElement>('.animate-marquee-left .testimonial-card');
+    const bottomRow = sectionRef.current.querySelectorAll<HTMLElement>('.animate-marquee-right .testimonial-card');
+    if (!topRow.length && !bottomRow.length) return;
 
     const ctx = gsap.context(() => {
-      gsap.to(cards, {
-        opacity: 1,
-        y: 0,
-        ease: 'power3.out',
-        duration: 0.9,
-        stagger: { each: 0.12, from: 0 },
+      const tl = gsap.timeline({
         scrollTrigger: {
           trigger: sectionRef.current,
           start: 'top 75%',
           toggleActions: 'play none none none',
         },
+        defaults: { ease: 'power3.out', duration: 0.8 },
       });
+
+      // Animate both rows simultaneously; internal small stagger per row.
+      tl.addLabel('startRows');
+      tl.to(topRow, { opacity: 1, y: 0, stagger: { each: 0.08, from: 0 } }, 'startRows');
+      tl.to(bottomRow, { opacity: 1, y: 0, stagger: { each: 0.08, from: 0 } }, 'startRows');
     }, sectionRef);
 
     return () => ctx.revert();
