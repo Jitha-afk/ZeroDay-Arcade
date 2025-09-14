@@ -1,6 +1,8 @@
 "use client";
-import React from 'react';
+import React, { useLayoutEffect, useRef } from 'react';
 import { cn } from '@/lib/utils';
+import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
 interface Testimonial {
   id: number;
@@ -28,7 +30,7 @@ const loopB = [...testimonials, ...testimonials];
 
 function Card({ t }: { t: Testimonial }) {
   return (
-    <figure className="w-[280px] shrink-0 rounded-xl border bg-card p-4 shadow-sm hover:shadow-md transition-shadow duration-300">
+    <figure className="testimonial-card w-[280px] shrink-0 rounded-xl border bg-card p-4 shadow-sm transition-shadow duration-300 will-change-transform opacity-0 translate-y-[100px]">
       <blockquote className="text-sm leading-snug text-muted-foreground">“{t.quote}”</blockquote>
       <figcaption className="mt-3 text-xs font-medium text-foreground">
         <span className="block">{t.name}</span>
@@ -39,18 +41,39 @@ function Card({ t }: { t: Testimonial }) {
 }
 
 export function Testimonials() {
+  const sectionRef = useRef<HTMLElement | null>(null);
+
+  useLayoutEffect(() => {
+    gsap.registerPlugin(ScrollTrigger);
+    if (!sectionRef.current) return;
+    const cards = sectionRef.current.querySelectorAll<HTMLElement>('.testimonial-card');
+    if (!cards.length) return;
+
+    const ctx = gsap.context(() => {
+      gsap.to(cards, {
+        opacity: 1,
+        y: 0,
+        ease: 'power3.out',
+        duration: 0.9,
+        stagger: { each: 0.12, from: 0 },
+        scrollTrigger: {
+          trigger: sectionRef.current,
+          start: 'top 75%',
+          toggleActions: 'play none none none',
+        },
+      });
+    }, sectionRef);
+
+    return () => ctx.revert();
+  }, []);
+
   return (
-    <section aria-label="Testimonials" className="relative w-full overflow-hidden py-24">
+    <section ref={sectionRef} aria-label="Testimonials" className="relative w-full overflow-hidden py-24">
       <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-background via-background/50 to-background" />
       <div className="space-y-14">
-        <div className="flex gap-6 animate-marquee-left will-change-transform" aria-hidden>
-          {loopA.map((t, i) => (
-            <Card key={`top-${t.id}-${i}`} t={t} />
-          ))}
-        </div>
-        <div className="flex gap-6 animate-marquee-right will-change-transform" aria-hidden>
-          {loopB.map((t, i) => (
-            <Card key={`bottom-${t.id}-${i}`} t={t} />
+        <div className="flex gap-6 flex-wrap" aria-hidden={false}>
+          {testimonials.map((t) => (
+            <Card key={`grid-${t.id}`} t={t} />
           ))}
         </div>
       </div>

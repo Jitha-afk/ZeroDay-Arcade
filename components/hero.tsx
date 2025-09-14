@@ -23,7 +23,7 @@ function SplitHeadline({
           key={wi}
           className="relative inline-block overflow-hidden"
           data-word
-          style={{ lineHeight: '1.05' }}
+          style={{ lineHeight: '1.05', paddingBottom: '2px' }}
         >
           {word.split('').map((char, ci) => (
             <span
