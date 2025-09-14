@@ -96,7 +96,7 @@ export function Hero() {
                   <SplitHeadline text="ZeroDay Arcade," group="headline" />
                 </div>
                 <div className="overflow-hidden text-primary">
-                  <SplitHeadline text="The Cyber Wargame Gauntlet" group="headline" />
+                  <SplitHeadline text="The Cyber Wargame Simulation" group="headline" />
                 </div>
               </div>
             </h1>
