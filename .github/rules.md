@@ -197,5 +197,43 @@ Ensure layering does not capture pointer events unless required.
 ## 22. Release Notes (Initial)
 - v0.1.0: Baseline navbar + hero + structural components scaffolded, design system primitives in place.
 
+## 23. GitHub Pages Deployment (Static Export)
+This landing site is intended for hosting on GitHub Pages using `next export` (configured via `output: 'export'` in `next.config.mjs`).
+
+### Constraints & Considerations
+- No server-side rendering or API Routes (anything dynamic must run entirely client-side).
+- Assets must resolve correctly under a repository-scoped `basePath` (e.g., `/ZeroDay-Arcade`).
+- `assetPrefix` & `basePath` are computed automatically in CI using `GITHUB_REPOSITORY`; ensure forks adjust as needed.
+- Images are set to `unoptimized: true` to avoid relying on Next.js image optimizer (not available in static export).
+
+### Environment Variables
+- `BASE_PATH` may override computed base path if deploying under a custom path.
+- Avoid secrets: static export exposes any inlined env vars.
+
+### Linking & Routing
+- Use relative `href` anchors (e.g., `#features`) for intra-page navigation; do not rely on dynamic route segments.
+- Avoid usage of `next/image` advanced optimization features (already unoptimized) and dynamic imports that rely on Node-only modules.
+
+### Adding New Assets
+- Place static assets under `public/` (consider creating if needed) to ensure inclusion in export output.
+- Reference via root-relative path respecting `basePath`: when using `<img src="/images/foo.png" />` it becomes `${basePath}/images/foo.png` post-export.
+
+### CI/CD Workflow
+- Ensure GitHub Action runs `npm run build` then publishes the `out/` directory to `gh-pages` branch (current action should mirror this—update if repo name changes).
+- Clear old artifacts to avoid stale asset caching (set proper cache headers if using a CDN layer later).
+
+### Feature Planning Under Static Constraints
+- For future interactive background or dynamic scenario lists: fetch from public JSON or a static generated file; avoid runtime server fetches.
+- Consider static JSON manifest versioning (`public/data/scenarios.json`) with cache-busting via filename hash if needed.
+
+### Common Pitfalls
+- Forgetting to adjust absolute URLs when moving between local (`/`) and Pages (`/RepoName/`). Use `next/config` runtime config or relative links.
+- Adding runtime-only Node APIs (will break in static output). Keep client bundles browser-safe.
+- Attempting to add form handlers or auth flows without a backend—use external SaaS endpoints if required.
+
+### Validation Checklist
+- [ ] Local export: `npm run build && npx serve out` renders correctly.
+- [ ] All internal links work with `basePath` set.
+- [ ] No 404s for fonts, images, or JS chunks in browser network panel.
 ---
 Maintainers should keep this file updated when structural, layout, navigation, or architectural changes occur. Add new sections as the platform moves beyond landing functionality.
