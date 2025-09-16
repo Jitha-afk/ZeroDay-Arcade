@@ -1,6 +1,6 @@
 # 🛡️ ZeroDay-Arcade
 
-*AI vs AI Cybersecurity Wargaming PlatformWhere artificial intelligence meets digital warfare*
+*Humans vs AI Cybersecurity Wargaming Platform <br> Where artificial intelligence meets digital warfare*
  
 
 ---
