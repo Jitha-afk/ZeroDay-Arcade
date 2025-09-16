@@ -1,0 +1,179 @@
+flowchart TD
+    A[T+00:00 - INITIAL BREACH] --> B[Attacker Jailbreaks RetailBot AI]
+    B --> C[AI bypasses safety guardrails]
+    C --> D[T+01:00 - AI Anomaly Detected]
+    C -.-> ALERT_001[🚨 ALERT_001: SOC_ANALYST<br/>Anomalous AI Behavior]
+    
+    C --> E[AI generates fake IT tickets]
+    E -.-> ALERT_IT_001[🚨 ALERT_IT_001: IT_HEAD<br/>System Performance Issues]
+    
+    ALERT_001 --> G[T+02:00 - THREAT ESCALATION]
+    G --> H[AI accesses internal APIs]
+    H -.-> ALERT_002[🚨 ALERT_002: SOC_LEAD + CISO<br/>AI Compromise Confirmed]
+
+    ALERT_002 --> J{CISO Decision Point 1<br/>T+02:30}
+    J -->|Passive Monitoring/Observe| MONITOR[MONITOR PATH]
+    J -->|Containment and Response| CONTAIN[CONTAINMENT PATH]
+    
+    %% MONITOR PATH (Left Side)
+    MONITOR --> MON1[T+03:00 - Monitor and analyse events closely]
+    MON1 -.-> ALERT_MON_001[🚨 ALERT_MON_001: SOC_ANALYST<br/>Continuous Event Monitoring]
+    
+    MON1 --> MON2[T+03:30 - Find if connection to any C&C]
+    MON2 -.-> ALERT_MON_002[🚨 ALERT_MON_002: SOC_LEAD<br/>C&C Investigation Required]
+    
+    MON2 --> MON3[T+04:00 - Establish breach status]
+    MON3 -.-> ALERT_MON_003[🚨 ALERT_MON_003: SOC_LEAD<br/>Breach Status Assessment]
+    
+    MON3 --> MON4[T+04:30 - Call for IR service/Retainer]
+    MON4 -.-> ALERT_MON_004[🚨 ALERT_MON_004: CISO<br/>External IR Support Required]
+    MON4 -.-> ALERT_MON_005[🚨 ALERT_MON_005: LEGAL_HEAD<br/>Retainer Agreement Activation]
+    
+    MON4 --> MON5[T+05:00 - Assist in investigation and forensics]
+    MON5 -.-> ALERT_MON_006[🚨 ALERT_MON_006: IT_HEAD<br/>Forensics Support Required]
+    MON5 -.-> ALERT_MON_007[🚨 ALERT_MON_007: SOC_ANALYST<br/>Evidence Collection]
+    
+    MON5 --> MON_DECISION{Containment Decision<br/>T+05:30}
+    MON_DECISION -->|Continue Observing| MON_OBSERVE[CONTINUE OBSERVING]
+    MON_DECISION -->|Move to Response| MON_RESPONSE[MOVE TO RESPONSE]
+    
+    %% Monitor - Continue Observing Branch
+    MON_OBSERVE --> OBS1[T+06:00 - Passively observe and prepare]
+    OBS1 -.-> ALERT_OBS_001[🚨 ALERT_OBS_001: SOC_ANALYST<br/>Passive Monitoring Active]
+    OBS1 -.-> ALERT_OBS_002[🚨 ALERT_OBS_002: IT_HEAD<br/>Redundant Site Preparation]
+    
+    OBS1 --> OBS2[T+07:00 - Inform stakeholder and engage teams]
+    OBS2 -.-> ALERT_OBS_003[🚨 ALERT_OBS_003: CISO<br/>Stakeholder Notification]
+    OBS2 -.-> ALERT_OBS_004[🚨 ALERT_OBS_004: LEGAL_HEAD<br/>Legal Team Engagement]
+    OBS2 -.-> ALERT_OBS_005[🚨 ALERT_OBS_005: PR_HEAD<br/>PR Team Standby]
+    
+    OBS2 --> OBS3[T+08:00 - Shutdown primary operations]
+    OBS3 -.-> ALERT_OBS_006[🚨 ALERT_OBS_006: IT_HEAD<br/>Primary Systems Shutdown]
+    
+    OBS3 --> OBS4[T+09:00 - Resume operation from new site]
+    OBS4 -.-> ALERT_OBS_007[🚨 ALERT_OBS_007: IT_HEAD<br/>DR Site Activation]
+    OBS4 -.-> ALERT_OBS_008[🚨 ALERT_OBS_008: PR_HEAD<br/>Service Migration Communication]
+    
+    OBS4 --> BAD_END_1[T+12:00 - BAD ENDING: Weak IR Process<br/>No resilience, Loss of business]
+    
+    %% CONTAINMENT PATH (Right Side)
+    CONTAIN --> CON1[T+03:00 - Monitor and analyse events closely]
+    CON1 -.-> ALERT_CON_001[🚨 ALERT_CON_001: SOC_ANALYST<br/>Enhanced Monitoring Initiated]
+    
+    CON1 --> CON2[T+03:30 - Find if connection to any C&C]
+    CON2 -.-> ALERT_CON_002[🚨 ALERT_CON_002: SOC_LEAD<br/>C&C Analysis in Progress]
+    
+    CON2 --> CON3[T+04:00 - Establish breach confirmation]
+    CON3 -.-> ALERT_CON_003[🚨 ALERT_CON_003: SOC_LEAD<br/>Breach Status Confirmed]
+    
+    CON3 --> CON4[T+04:30 - Assess the blast radius]
+    CON4 -.-> ALERT_CON_004[🚨 ALERT_CON_004: SOC_LEAD<br/>Impact Scope Assessment]
+    CON4 -.-> ALERT_CON_005[🚨 ALERT_CON_005: IT_HEAD<br/>System Impact Analysis]
+    
+    CON4 --> CON5[T+05:00 - Impact assessment for containment]
+    CON5 -.-> ALERT_CON_006[🚨 ALERT_CON_006: CISO<br/>Business Impact Analysis]
+    CON5 -.-> ALERT_CON_007[🚨 ALERT_CON_007: LEGAL_HEAD<br/>Legal Impact Assessment]
+    
+    CON5 --> CON6[T+05:30 - Isolate/contain impact for compromised assets]
+    CON6 -.-> ALERT_CON_008[🚨 ALERT_CON_008: IT_HEAD<br/>Asset Isolation Required]
+    CON6 -.-> ALERT_CON_009[🚨 ALERT_CON_009: SOC_ANALYST<br/>Evidence Preservation]
+    
+    CON6 --> CON_DECISION{Response Strategy Decision<br/>T+06:00}
+    CON_DECISION -->|Complete Containment| COMPLETE_RESP[COMPLETE RESPONSE]
+    CON_DECISION -->|Continue Operations| CONTINUE_OPS[CONTINUE OPERATIONS]
+    CON_DECISION -->|Outsource Response| OUTSOURCE_RESP[OUTSOURCE RESPONSE]
+    
+    %% Complete Response Branch
+    COMPLETE_RESP --> COMP1[T+06:30 - Shut down the app to fully contain]
+    COMP1 -.-> ALERT_COMP_001[🚨 ALERT_COMP_001: IT_HEAD<br/>Full System Shutdown]
+    COMP1 -.-> ALERT_COMP_002[🚨 ALERT_COMP_002: PR_HEAD<br/>Service Outage Communication]
+    
+    COMP1 --> COMP2[T+07:30 - Approvals from business, CEO, Board]
+    COMP2 -.-> ALERT_COMP_003[🚨 ALERT_COMP_003: CISO<br/>Executive Approval Required]
+    COMP2 -.-> ALERT_COMP_004[🚨 ALERT_COMP_004: LEGAL_HEAD<br/>Board Notification]
+    
+    COMP2 --> COMP3[T+09:00 - Invoke PR and Legal support]
+    COMP3 -.-> ALERT_COMP_005[🚨 ALERT_COMP_005: PR_HEAD<br/>Crisis Communications Plan]
+    COMP3 -.-> ALERT_COMP_006[🚨 ALERT_COMP_006: LEGAL_HEAD<br/>Regulatory Notification]
+    
+    COMP3 --> GOOD_END[T+12:00 - GOOD ENDING: Low resilience<br/>but business losses contained]
+    
+    %% Continue Operations Branch
+    CONTINUE_OPS --> CONT1[T+06:30 - Take inputs from IR specialists]
+    CONT1 -.-> ALERT_CONT_001[🚨 ALERT_CONT_001: SOC_LEAD<br/>IR Specialist Consultation]
+    
+    CONT1 --> CONT2[T+07:00 - Proceed to limit access to critical data]
+    CONT2 -.-> ALERT_CONT_002[🚨 ALERT_CONT_002: IT_HEAD<br/>Access Control Implementation]
+    CONT2 -.-> ALERT_CONT_003[🚨 ALERT_CONT_003: SOC_ANALYST<br/>Critical Data Protection]
+    
+    CONT2 --> CONT3[T+07:30 - Suspend Portal Operations to minimize impact]
+    CONT3 -.-> ALERT_CONT_004[🚨 ALERT_CONT_004: IT_HEAD<br/>Portal Suspension]
+    CONT3 -.-> ALERT_CONT_005[🚨 ALERT_CONT_005: PR_HEAD<br/>Service Limitation Notice]
+    
+    CONT3 --> CONT4[T+08:30 - Invoke resilience procedures and migrate to DR]
+    CONT4 -.-> ALERT_CONT_006[🚨 ALERT_CONT_006: IT_HEAD<br/>DR Migration Initiated]
+    
+    CONT4 --> CONT5[T+09:30 - Isolate impacted assets fully]
+    CONT5 -.-> ALERT_CONT_007[🚨 ALERT_CONT_007: SOC_ANALYST<br/>Asset Isolation Complete]
+    
+    CONT5 --> CONT6[T+10:30 - Perform thorough sanitization]
+    CONT6 -.-> ALERT_CONT_008[🚨 ALERT_CONT_008: IT_HEAD<br/>System Sanitization]
+    
+    CONT6 --> MOD_END[T+12:00 - MODERATE ENDING: Operate while<br/>mitigating the impact]
+    
+    %% Outsource Response Branch
+    OUTSOURCE_RESP --> OUT1[T+06:30 - Further Impact Analysis & Assessment]
+    OUT1 -.-> ALERT_OUT_001[🚨 ALERT_OUT_001: SOC_LEAD<br/>External Assessment Required]
+    OUT1 -.-> ALERT_OUT_002[🚨 ALERT_OUT_002: LEGAL_HEAD<br/>Third-party Engagement]
+    
+    OUT1 --> OUT2[T+07:30 - Engage with Cyber Insurance provider]
+    OUT2 -.-> ALERT_OUT_003[🚨 ALERT_OUT_003: LEGAL_HEAD<br/>Insurance Claim Initiation]
+    OUT2 -.-> ALERT_OUT_004[🚨 ALERT_OUT_004: CISO<br/>Insurance Provider Coordination]
+    
+    OUT2 --> OUT3[T+08:30 - Cyber Insurance Provider introduces IR Specialist]
+    OUT3 -.-> ALERT_OUT_005[🚨 ALERT_OUT_005: SOC_LEAD<br/>External IR Team Assignment]
+    
+    OUT3 --> OUT4[T+09:30 - Inform relevant stakeholder]
+    OUT4 -.-> ALERT_OUT_006[🚨 ALERT_OUT_006: CISO<br/>Stakeholder Update Required]
+    OUT4 -.-> ALERT_OUT_007[🚨 ALERT_OUT_007: PR_HEAD<br/>External Support Communication]
+    
+    OUT4 --> OUT5[T+10:30 - Prepare statement, include LEGAL and PR if required]
+    OUT5 -.-> ALERT_OUT_008[🚨 ALERT_OUT_008: PR_HEAD<br/>Public Statement Preparation]
+    OUT5 -.-> ALERT_OUT_009[🚨 ALERT_OUT_009: LEGAL_HEAD<br/>Legal Review Required]
+    
+    OUT5 --> HIGH_END[T+12:00 - HIGH IMPACT ENDING: Decision making<br/>with 3P. Impact could be high]
+    
+    %% Monitor Path - Move to Response Branch
+    MON_RESPONSE --> RESP1[T+06:00 - Awaiting Analysis of IR specialist]
+    RESP1 -.-> ALERT_RESP_001[🚨 ALERT_RESP_001: SOC_LEAD<br/>IR Analysis Pending]
+    
+    RESP1 --> RESP2[T+07:30 - Guidance from IR specialist for closure]
+    RESP2 -.-> ALERT_RESP_002[🚨 ALERT_RESP_002: CISO<br/>IR Guidance Received]
+    
+    RESP2 --> RESP3[T+09:00 - Inform relevant stakeholder]
+    RESP3 -.-> ALERT_RESP_003[🚨 ALERT_RESP_003: CISO<br/>Stakeholder Briefing]
+    
+    RESP3 --> RESP4[T+10:30 - Prepare statement, include LEGAL and PR]
+    RESP4 -.-> ALERT_RESP_004[🚨 ALERT_RESP_004: LEGAL_HEAD<br/>Legal Statement Review]
+    RESP4 -.-> ALERT_RESP_005[🚨 ALERT_RESP_005: PR_HEAD<br/>PR Statement Coordination]
+    
+    RESP4 --> MOD_END_2[T+12:00 - MODERATE ENDING: IR Specialist<br/>guide on response]
+    
+    %% Styling
+    classDef startNode fill:#e1f5fe,stroke:#01579b,stroke-width:2px
+    classDef alertBox fill:#cce7ff,stroke:#0066cc,stroke-width:2px
+    classDef decision fill:#e8f5e8,stroke:#2e7d32,stroke-width:2px
+    classDef normalBox fill:#f5f5f5,stroke:#666666,stroke-width:1px
+    classDef ending fill:#f3e5f5,stroke:#8e24aa,stroke-width:2px
+    classDef pathBox fill:#fff9c4,stroke:#f57f17,stroke-width:2px
+    classDef monitorPath fill:#e3f2fd,stroke:#1976d2,stroke-width:1px
+    classDef containPath fill:#f1f8e9,stroke:#689f38,stroke-width:1px
+    
+    class A startNode
+    class ALERT_001,ALERT_IT_001,ALERT_002,ALERT_MON_001,ALERT_MON_002,ALERT_MON_003,ALERT_MON_004,ALERT_MON_005,ALERT_MON_006,ALERT_MON_007,ALERT_OBS_001,ALERT_OBS_002,ALERT_OBS_003,ALERT_OBS_004,ALERT_OBS_005,ALERT_OBS_006,ALERT_OBS_007,ALERT_OBS_008,ALERT_CON_001,ALERT_CON_002,ALERT_CON_003,ALERT_CON_004,ALERT_CON_005,ALERT_CON_006,ALERT_CON_007,ALERT_CON_008,ALERT_CON_009,ALERT_COMP_001,ALERT_COMP_002,ALERT_COMP_003,ALERT_COMP_004,ALERT_COMP_005,ALERT_COMP_006,ALERT_CONT_001,ALERT_CONT_002,ALERT_CONT_003,ALERT_CONT_004,ALERT_CONT_005,ALERT_CONT_006,ALERT_CONT_007,ALERT_CONT_008,ALERT_OUT_001,ALERT_OUT_002,ALERT_OUT_003,ALERT_OUT_004,ALERT_OUT_005,ALERT_OUT_006,ALERT_OUT_007,ALERT_OUT_008,ALERT_OUT_009,ALERT_RESP_001,ALERT_RESP_002,ALERT_RESP_003,ALERT_RESP_004,ALERT_RESP_005 alertBox
+    class J,MON_DECISION,CON_DECISION decision
+    class B,C,D,E,G,H normalBox
+    class MONITOR,CONTAIN pathBox
+    class MON1,MON2,MON3,MON4,MON5,OBS1,OBS2,OBS3,OBS4,RESP1,RESP2,RESP3,RESP4 monitorPath
+    class CON1,CON2,CON3,CON4,CON5,CON6,COMP1,COMP2,COMP3,CONT1,CONT2,CONT3,CONT4,CONT5,CONT6,OUT1,OUT2,OUT3,OUT4,OUT5 containPath
+    class BAD_END_1,GOOD_END,MOD_END,HIGH_END,MOD_END_2 ending
