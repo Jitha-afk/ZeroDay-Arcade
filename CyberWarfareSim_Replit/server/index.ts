@@ -36,6 +36,8 @@ app.use((req, res, next) => {
   next();
 });
 
+const isWindows = process.platform === 'win32';
+
 (async () => {
   const server = await registerRoutes(app);
 
@@ -64,7 +66,7 @@ app.use((req, res, next) => {
   server.listen({
     port,
     host: "0.0.0.0",
-    reusePort: true,
+    reusePort: !isWindows,
   }, () => {
     log(`serving on port ${port}`);
   });
