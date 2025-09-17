@@ -1,0 +1,981 @@
+{
+  "scenario_id": "ai_breach_retail_bot",
+  "scenario_name": "RetailBot AI Jailbreak and System Compromise",
+  "description": "An advanced AI chatbot used for customer service has been compromised through a sophisticated jailbreak attack, bypassing safety guardrails and gaining unauthorized access to internal systems.",
+  "duration_minutes": 720,
+  "initial_timeline": [
+    {
+      "time": "T+00:00",
+      "event": "INITIAL BREACH",
+      "description": "Attacker successfully jailbreaks RetailBot AI system",
+      "severity": "critical",
+      "automatic": true
+    },
+    {
+      "time": "T+01:00", 
+      "event": "AI ANOMALY DETECTED",
+      "description": "Automated monitoring systems detect unusual AI behavior patterns",
+      "severity": "high",
+      "automatic": true
+    }
+  ],
+  "alerts": [
+    {
+      "alert_id": "ALERT_001",
+      "time": "T+01:00",
+      "recipient_role": "SOC_ANALYST",
+      "title": "Anomalous AI Behavior Detected",
+      "message": "URGENT: Our RetailBot AI system is exhibiting highly unusual behavior patterns. The AI appears to be generating responses outside its normal operational parameters and may have bypassed safety guardrails. Immediate investigation required.",
+      "severity": "high",
+      "category": "ai_security",
+      "requires_acknowledgment": true,
+      "escalation_timer": 30
+    },
+    {
+      "alert_id": "ALERT_IT_001",
+      "time": "T+01:00",
+      "recipient_role": "IT_HEAD",
+      "title": "System Performance Issues Detected",
+      "message": "Multiple IT support tickets have been automatically generated reporting various system performance issues. These tickets appear to be originating from our AI customer service system. Please investigate potential correlation with recent system changes.",
+      "severity": "medium",
+      "category": "system_performance",
+      "requires_acknowledgment": true,
+      "escalation_timer": 60
+    },
+    {
+      "alert_id": "ALERT_002",
+      "time": "T+02:00",
+      "recipient_role": ["SOC_LEAD", "CISO"],
+      "title": "AI System Compromise Confirmed",
+      "message": "CRITICAL: Analysis confirms that our AI system has been compromised. The AI has gained unauthorized access to internal APIs and is actively attempting to escalate privileges. This represents a significant security incident requiring immediate executive attention.",
+      "severity": "critical",
+      "category": "security_incident",
+      "requires_acknowledgment": true,
+      "escalation_timer": 15,
+      "decision_required": {
+        "decision_id": "CISO_DECISION_1",
+        "time_limit": 30,
+        "options": [
+          {
+            "id": "monitor",
+            "label": "Passive Monitoring/Observe",
+            "description": "Continue monitoring the situation while gathering more intelligence",
+            "path": "monitor_path"
+          },
+          {
+            "id": "contain",
+            "label": "Containment and Response", 
+            "description": "Begin immediate containment and active response procedures",
+            "path": "containment_path"
+          }
+        ]
+      }
+    }
+  ],
+  "decision_paths": {
+    "monitor_path": {
+      "name": "Monitor Path",
+      "description": "Passive monitoring and intelligence gathering approach",
+      "alerts": [
+        {
+          "alert_id": "ALERT_MON_001",
+          "time": "T+03:00",
+          "recipient_role": "SOC_ANALYST",
+          "title": "Continuous Event Monitoring Initiated",
+          "message": "Enhanced monitoring protocols have been activated. Please maintain continuous surveillance of the compromised AI system and document all anomalous activities. Report any escalation in threat behavior immediately.",
+          "severity": "high",
+          "category": "monitoring"
+        },
+        {
+          "alert_id": "ALERT_MON_002",
+          "time": "T+03:30",
+          "recipient_role": "SOC_LEAD",
+          "title": "Command & Control Investigation Required",
+          "message": "Investigation needed to determine if the compromised AI system has established communication with external command and control servers. Please analyze network traffic and connection patterns for signs of external coordination.",
+          "severity": "high",
+          "category": "threat_intelligence"
+        },
+        {
+          "alert_id": "ALERT_MON_003",
+          "time": "T+04:00",
+          "recipient_role": "SOC_LEAD",
+          "title": "Breach Status Assessment Required",
+          "message": "A comprehensive assessment is needed to establish the full extent of the security breach. Please compile findings on system access, data exposure, and potential impact to business operations.",
+          "severity": "high",
+          "category": "assessment"
+        },
+        {
+          "alert_id": "ALERT_MON_004",
+          "time": "T+04:30",
+          "recipient_role": "CISO",
+          "title": "External Incident Response Support Required",
+          "message": "The complexity of this AI-based security incident requires specialized external expertise. Authorization needed to engage our incident response retainer services for advanced threat analysis and remediation guidance.",
+          "severity": "critical",
+          "category": "escalation"
+        },
+        {
+          "alert_id": "ALERT_MON_005",
+          "time": "T+04:30",
+          "recipient_role": "LEGAL_HEAD",
+          "title": "Retainer Agreement Activation",
+          "message": "Legal approval required to activate our incident response retainer agreement. Please review contractual obligations and ensure proper authorization for external security consultant engagement.",
+          "severity": "medium",
+          "category": "legal"
+        },
+        {
+          "alert_id": "ALERT_MON_006",
+          "time": "T+05:00",
+          "recipient_role": "IT_HEAD",
+          "title": "Forensics Support Required",
+          "message": "IT infrastructure support needed for digital forensics investigation. Please prepare system logs, access records, and ensure preservation of evidence while maintaining business continuity.",
+          "severity": "high",
+          "category": "forensics"
+        },
+        {
+          "alert_id": "ALERT_MON_007",
+          "time": "T+05:00",
+          "recipient_role": "SOC_ANALYST",
+          "title": "Evidence Collection Protocol",
+          "message": "Begin systematic evidence collection procedures. Document all AI system interactions, log anomalies, and preserve digital artifacts for forensic analysis while maintaining chain of custody.",
+          "severity": "high",
+          "category": "evidence"
+        }
+      ],
+      "sub_decisions": {
+        "containment_decision": {
+          "decision_id": "MON_CONTAINMENT_DECISION",
+          "time": "T+05:30",
+          "recipient_role": "CISO",
+          "title": "Containment Strategy Decision",
+          "options": [
+            {
+              "id": "continue_observing",
+              "label": "Continue Observing",
+              "description": "Maintain passive monitoring while preparing contingency plans",
+              "path": "observe_path"
+            },
+            {
+              "id": "move_to_response", 
+              "label": "Move to Active Response",
+              "description": "Transition from monitoring to active incident response",
+              "path": "response_path"
+            }
+          ]
+        }
+      }
+    },
+    "containment_path": {
+      "name": "Containment Path", 
+      "description": "Active containment and response approach",
+      "alerts": [
+        {
+          "alert_id": "ALERT_CON_001",
+          "time": "T+03:00",
+          "recipient_role": "SOC_ANALYST",
+          "title": "Enhanced Monitoring Initiated",
+          "message": "Enhanced monitoring and analysis protocols activated for active threat containment. Implement real-time threat tracking and prepare for immediate response actions as situation evolves.",
+          "severity": "high",
+          "category": "monitoring"
+        },
+        {
+          "alert_id": "ALERT_CON_002",
+          "time": "T+03:30",
+          "recipient_role": "SOC_LEAD",
+          "title": "Command & Control Analysis in Progress",
+          "message": "Active analysis underway to identify external command and control communications. Prioritize network segmentation and traffic analysis to prevent further compromise escalation.",
+          "severity": "high",
+          "category": "threat_analysis"
+        },
+        {
+          "alert_id": "ALERT_CON_003",
+          "time": "T+04:00",
+          "recipient_role": "SOC_LEAD",
+          "title": "Security Breach Confirmed",
+          "message": "Breach confirmation completed. The AI system compromise is verified and poses active threat to organizational security. Recommend immediate escalation to containment protocols.",
+          "severity": "critical",
+          "category": "confirmation"
+        },
+        {
+          "alert_id": "ALERT_CON_004",
+          "time": "T+04:30",
+          "recipient_role": "SOC_LEAD",
+          "title": "Impact Scope Assessment",
+          "message": "Comprehensive assessment required to determine the blast radius of the AI system compromise. Map all connected systems, data repositories, and potential lateral movement paths.",
+          "severity": "critical",
+          "category": "assessment"
+        },
+        {
+          "alert_id": "ALERT_CON_005",
+          "time": "T+04:30",
+          "recipient_role": "IT_HEAD",
+          "title": "System Impact Analysis Required",
+          "message": "Detailed technical analysis needed to assess impact on IT infrastructure. Evaluate system dependencies, data access patterns, and prepare containment implementation plans.",
+          "severity": "high",
+          "category": "technical_analysis"
+        },
+        {
+          "alert_id": "ALERT_CON_006",
+          "time": "T+05:00",
+          "recipient_role": "CISO",
+          "title": "Business Impact Analysis",
+          "message": "Executive assessment required on business impact of AI system compromise. Evaluate operational disruption, financial exposure, and reputational risks for strategic response planning.",
+          "severity": "critical",
+          "category": "business_impact"
+        },
+        {
+          "alert_id": "ALERT_CON_007",
+          "time": "T+05:00",
+          "recipient_role": "LEGAL_HEAD",
+          "title": "Legal Impact Assessment",
+          "message": "Legal review required for potential regulatory compliance issues, data breach notifications, and liability exposure resulting from AI system compromise.",
+          "severity": "high",
+          "category": "legal_compliance"
+        },
+        {
+          "alert_id": "ALERT_CON_008",
+          "time": "T+05:30",
+          "recipient_role": "IT_HEAD",
+          "title": "Asset Isolation Required",
+          "message": "Immediate isolation of compromised AI system and connected assets required. Implement network segmentation and access controls to prevent further lateral movement.",
+          "severity": "critical",
+          "category": "containment"
+        },
+        {
+          "alert_id": "ALERT_CON_009",
+          "time": "T+05:30",
+          "recipient_role": "SOC_ANALYST",
+          "title": "Evidence Preservation Protocol",
+          "message": "Critical evidence preservation required during containment activities. Ensure forensic integrity while implementing isolation measures for compromised systems.",
+          "severity": "high",
+          "category": "evidence"
+        }
+      ],
+      "sub_decisions": {
+        "response_strategy": {
+          "decision_id": "CON_RESPONSE_STRATEGY",
+          "time": "T+06:00",
+          "recipient_role": "CISO",
+          "title": "Response Strategy Decision",
+          "options": [
+            {
+              "id": "complete_containment",
+              "label": "Complete Containment",
+              "description": "Full system shutdown and complete containment approach",
+              "path": "complete_response"
+            },
+            {
+              "id": "continue_operations",
+              "label": "Continue Operations", 
+              "description": "Maintain business operations while implementing targeted containment",
+              "path": "continue_ops"
+            },
+            {
+              "id": "outsource_response",
+              "label": "Outsource Response",
+              "description": "Engage external incident response specialists for management",
+              "path": "outsource_response"
+            }
+          ]
+        }
+      }
+    },
+    "observe_path": {
+      "name": "Continue Observing",
+      "alerts": [
+        {
+          "alert_id": "ALERT_OBS_001",
+          "time": "T+06:00",
+          "recipient_role": "SOC_ANALYST", 
+          "title": "Passive Monitoring Active",
+          "message": "Maintaining passive observation of compromised AI system. Continue detailed logging and behavioral analysis while avoiding actions that might alert the attacker to our awareness.",
+          "severity": "high",
+          "category": "surveillance"
+        },
+        {
+          "alert_id": "ALERT_OBS_002",
+          "time": "T+06:00",
+          "recipient_role": "IT_HEAD",
+          "title": "Disaster Recovery Site Preparation",
+          "message": "Begin preparation of redundant disaster recovery site for potential emergency migration. Ensure backup systems are ready for immediate activation if containment fails.",
+          "severity": "medium",
+          "category": "business_continuity"
+        },
+        {
+          "alert_id": "ALERT_OBS_003",
+          "time": "T+07:00",
+          "recipient_role": "CISO",
+          "title": "Stakeholder Notification Required",
+          "message": "Executive stakeholder briefing required on current security incident status. Prepare summary of threat assessment and potential business impact scenarios.",
+          "severity": "high",
+          "category": "communication"
+        },
+        {
+          "alert_id": "ALERT_OBS_004",
+          "time": "T+07:00",
+          "recipient_role": "LEGAL_HEAD",
+          "title": "Legal Team Engagement",
+          "message": "Legal team activation required for potential breach notification requirements and regulatory compliance preparation. Review applicable disclosure obligations.",
+          "severity": "medium",
+          "category": "legal_preparation"
+        },
+        {
+          "alert_id": "ALERT_OBS_005",
+          "time": "T+07:00",
+          "recipient_role": "PR_HEAD",
+          "title": "Public Relations Team Standby",
+          "message": "PR team standby activation for potential crisis communications. Prepare holding statements and stakeholder communication plans for various escalation scenarios.",
+          "severity": "medium",
+          "category": "crisis_communications"
+        },
+        {
+          "alert_id": "ALERT_OBS_006",
+          "time": "T+08:00",
+          "recipient_role": "IT_HEAD",
+          "title": "Primary Systems Shutdown",
+          "message": "Authorization received for controlled shutdown of primary operational systems. Execute graceful shutdown procedures to minimize business disruption while containing threat.",
+          "severity": "critical",
+          "category": "system_shutdown"
+        },
+        {
+          "alert_id": "ALERT_OBS_007",
+          "time": "T+09:00",
+          "recipient_role": "IT_HEAD",
+          "title": "Disaster Recovery Site Activation",
+          "message": "Initiate disaster recovery site activation procedures. Begin migration of critical business operations to secure backup infrastructure.",
+          "severity": "high",
+          "category": "disaster_recovery"
+        },
+        {
+          "alert_id": "ALERT_OBS_008",
+          "time": "T+09:00",
+          "recipient_role": "PR_HEAD",
+          "title": "Service Migration Communication",
+          "message": "Customer communication required regarding service migration to backup systems. Prepare messaging that maintains confidence while explaining service changes.",
+          "severity": "medium",
+          "category": "customer_communication"
+        }
+      ],
+      "ending": {
+        "time": "T+12:00",
+        "type": "bad_ending",
+        "title": "Weak Incident Response Process",
+        "description": "The passive monitoring approach resulted in insufficient threat containment. Business operations were severely disrupted with significant loss of customer confidence and revenue. The organization's incident response capabilities proved inadequate for handling sophisticated AI-based attacks."
+      }
+    },
+    "response_path": {
+      "name": "Move to Active Response",
+      "alerts": [
+        {
+          "alert_id": "ALERT_RESP_001",
+          "time": "T+06:00",
+          "recipient_role": "SOC_LEAD",
+          "title": "Incident Response Analysis Pending",
+          "message": "Awaiting detailed analysis from external incident response specialists. Maintain current monitoring posture while preparing for guided response actions based on expert recommendations.",
+          "severity": "high",
+          "category": "expert_consultation"
+        },
+        {
+          "alert_id": "ALERT_RESP_002",
+          "time": "T+07:30",
+          "recipient_role": "CISO",
+          "title": "Incident Response Guidance Received",
+          "message": "External IR specialists have provided detailed guidance for incident closure procedures. Review recommendations and prepare for implementation of expert-guided response strategy.",
+          "severity": "high",
+          "category": "expert_guidance"
+        },
+        {
+          "alert_id": "ALERT_RESP_003",
+          "time": "T+09:00",
+          "recipient_role": "CISO",
+          "title": "Stakeholder Briefing Required",
+          "message": "Executive briefing required on incident response progress and closure recommendations. Prepare comprehensive status update including risk assessment and mitigation measures.",
+          "severity": "medium",
+          "category": "executive_briefing"
+        },
+        {
+          "alert_id": "ALERT_RESP_004",
+          "time": "T+10:30",
+          "recipient_role": "LEGAL_HEAD",
+          "title": "Legal Statement Review",
+          "message": "Legal review required for incident closure statements and any required regulatory notifications. Ensure compliance with all applicable disclosure requirements.",
+          "severity": "medium",
+          "category": "legal_review"
+        },
+        {
+          "alert_id": "ALERT_RESP_005",
+          "time": "T+10:30",
+          "recipient_role": "PR_HEAD",
+          "title": "Public Relations Statement Coordination",
+          "message": "Coordinate public relations messaging for incident closure communications. Ensure consistent messaging across all stakeholder communications channels.",
+          "severity": "medium",
+          "category": "pr_coordination"
+        }
+      ],
+      "ending": {
+        "time": "T+12:00",
+        "type": "moderate_ending",
+        "title": "Incident Response Specialist Guidance",
+        "description": "The transition to expert-guided response proved effective in managing the incident. External incident response specialists provided valuable guidance that helped contain the threat while maintaining some business continuity. Moderate impact to operations but good learning experience."
+      }
+    },
+    "complete_response": {
+      "name": "Complete Containment Response",
+      "alerts": [
+        {
+          "alert_id": "ALERT_COMP_001",
+          "time": "T+06:30",
+          "recipient_role": "IT_HEAD",
+          "title": "Full System Shutdown Initiated",
+          "message": "Complete system shutdown authorization received. Implementing full containment procedures including shutdown of all AI-connected systems and applications to prevent further compromise.",
+          "severity": "critical",
+          "category": "system_shutdown"
+        },
+        {
+          "alert_id": "ALERT_COMP_002",
+          "time": "T+06:30",
+          "recipient_role": "PR_HEAD",
+          "title": "Service Outage Communication",
+          "message": "Immediate customer communication required regarding planned service outage for security reasons. Prepare messaging that maintains trust while explaining service interruption.",
+          "severity": "high",
+          "category": "crisis_communication"
+        },
+        {
+          "alert_id": "ALERT_COMP_003",
+          "time": "T+07:30",
+          "recipient_role": "CISO",
+          "title": "Executive Approval Required",
+          "message": "Executive approval needed for extended system shutdown and associated business impact. Present risk analysis and cost-benefit assessment for complete containment approach.",
+          "severity": "critical",
+          "category": "executive_approval"
+        },
+        {
+          "alert_id": "ALERT_COMP_004",
+          "time": "T+07:30",
+          "recipient_role": "LEGAL_HEAD",
+          "title": "Board Notification Required",
+          "message": "Board of directors notification required for significant business disruption due to security incident. Prepare comprehensive incident summary and business impact assessment.",
+          "severity": "high",
+          "category": "board_notification"
+        },
+        {
+          "alert_id": "ALERT_COMP_005",
+          "time": "T+09:00",
+          "recipient_role": "PR_HEAD",
+          "title": "Crisis Communications Plan Activation",
+          "message": "Full crisis communications plan activation required. Coordinate messaging across all channels including customer notifications, media statements, and stakeholder communications.",
+          "severity": "high",
+          "category": "crisis_management"
+        },
+        {
+          "alert_id": "ALERT_COMP_006",
+          "time": "T+09:00",
+          "recipient_role": "LEGAL_HEAD",
+          "title": "Regulatory Notification Requirements",
+          "message": "Assess and implement required regulatory notifications for security incident. Ensure compliance with all applicable data breach and incident reporting requirements.",
+          "severity": "high",
+          "category": "regulatory_compliance"
+        }
+      ],
+      "ending": {
+        "time": "T+12:00",
+        "type": "good_ending",
+        "title": "Low Resilience but Contained Losses",
+        "description": "The complete containment approach successfully prevented further damage and data exposure. While business operations were significantly disrupted, the threat was fully contained and customer data remained secure. Strong security posture demonstrated but at the cost of business continuity."
+      }
+    },
+    "continue_ops": {
+      "name": "Continue Operations with Containment",
+      "alerts": [
+        {
+          "alert_id": "ALERT_CONT_001",
+          "time": "T+06:30",
+          "recipient_role": "SOC_LEAD",
+          "title": "Incident Response Specialist Consultation",
+          "message": "Consulting with incident response specialists on optimal strategy for maintaining operations while containing threat. Implementing expert recommendations for balanced approach.",
+          "severity": "high",
+          "category": "expert_consultation"
+        },
+        {
+          "alert_id": "ALERT_CONT_002",
+          "time": "T+07:00",
+          "recipient_role": "IT_HEAD",
+          "title": "Access Control Implementation",
+          "message": "Implementing enhanced access controls and privilege restrictions to limit exposure to critical data systems while maintaining essential business operations.",
+          "severity": "high",
+          "category": "access_control"
+        },
+        {
+          "alert_id": "ALERT_CONT_003",
+          "time": "T+07:00",
+          "recipient_role": "SOC_ANALYST",
+          "title": "Critical Data Protection Measures",
+          "message": "Implementing additional protection layers for critical data repositories. Enhanced monitoring and access restrictions in place to prevent unauthorized data access.",
+          "severity": "high",
+          "category": "data_protection"
+        },
+        {
+          "alert_id": "ALERT_CONT_004",
+          "time": "T+07:30",
+          "recipient_role": "IT_HEAD",
+          "title": "Portal Operations Suspension",
+          "message": "Suspending customer portal operations to minimize exposure while maintaining core business functions. Implementing alternative customer service channels.",
+          "severity": "medium",
+          "category": "service_limitation"
+        },
+        {
+          "alert_id": "ALERT_CONT_005",
+          "time": "T+07:30",
+          "recipient_role": "PR_HEAD",
+          "title": "Service Limitation Notice",
+          "message": "Customer communication required regarding temporary limitation of online portal services. Prepare messaging explaining alternative service channels and expected restoration timeline.",
+          "severity": "medium",
+          "category": "customer_communication"
+        },
+        {
+          "alert_id": "ALERT_CONT_006",
+          "time": "T+08:30",
+          "recipient_role": "IT_HEAD",
+          "title": "Disaster Recovery Migration Initiated",
+          "message": "Activating disaster recovery procedures to migrate critical operations to secure backup infrastructure while maintaining business continuity.",
+          "severity": "high",
+          "category": "disaster_recovery"
+        },
+        {
+          "alert_id": "ALERT_CONT_007",
+          "time": "T+09:30",
+          "recipient_role": "SOC_ANALYST",
+          "title": "Asset Isolation Complete",
+          "message": "Successfully isolated all compromised assets while maintaining operational capability on secure infrastructure. Threat containment objectives achieved.",
+          "severity": "medium",
+          "category": "containment_success"
+        },
+        {
+          "alert_id": "ALERT_CONT_008",
+          "time": "T+10:30",
+          "recipient_role": "IT_HEAD",
+          "title": "System Sanitization Procedures",
+          "message": "Implementing thorough sanitization procedures for all potentially compromised systems. Comprehensive security validation before any system restoration.",
+          "severity": "high",
+          "category": "system_sanitization"
+        }
+      ],
+      "ending": {
+        "time": "T+12:00",
+        "type": "moderate_ending",
+        "title": "Balanced Operations and Mitigation",
+        "description": "Successfully maintained essential business operations while effectively containing the security threat. The balanced approach minimized business disruption while ensuring security objectives were met. Good demonstration of resilience and adaptive incident response."
+      }
+    },
+    "outsource_response": {
+      "name": "Outsourced Response Management",
+      "alerts": [
+        {
+          "alert_id": "ALERT_OUT_001",
+          "time": "T+06:30",
+          "recipient_role": "SOC_LEAD",
+          "title": "External Assessment Required",
+          "message": "Engaging external security specialists for comprehensive impact analysis and assessment. Preparing detailed incident briefing for third-party incident response team.",
+          "severity": "high",
+          "category": "external_engagement"
+        },
+        {
+          "alert_id": "ALERT_OUT_002",
+          "time": "T+06:30",
+          "recipient_role": "LEGAL_HEAD",
+          "title": "Third-party Engagement Authorization",
+          "message": "Legal authorization required for engagement of external incident response services. Review contractual terms and ensure proper data handling agreements are in place.",
+          "severity": "medium",
+          "category": "legal_authorization"
+        },
+        {
+          "alert_id": "ALERT_OUT_003",
+          "time": "T+07:30",
+          "recipient_role": "LEGAL_HEAD",
+          "title": "Insurance Claim Initiation",
+          "message": "Initiating cyber insurance claim for security incident response coverage. Prepare documentation and coordinate with insurance provider for specialist assignment.",
+          "severity": "medium",
+          "category": "insurance_claim"
+        },
+        {
+          "alert_id": "ALERT_OUT_004",
+          "time": "T+07:30",
+          "recipient_role": "CISO",
+          "title": "Insurance Provider Coordination",
+          "message": "Coordinating with cyber insurance provider for incident response coverage and specialist assignment. Ensure compliance with insurance policy requirements.",
+          "severity": "medium",
+          "category": "insurance_coordination"
+        },
+        {
+          "alert_id": "ALERT_OUT_005",
+          "time": "T+08:30",
+          "recipient_role": "SOC_LEAD",
+          "title": "External Incident Response Team Assignment",
+          "message": "Cyber insurance provider has assigned specialized incident response team. Preparing handover briefing and coordinating access requirements for external specialists.",
+          "severity": "high",
+          "category": "team_assignment"
+        },
+        {
+          "alert_id": "ALERT_OUT_006",
+          "time": "T+09:30",
+          "recipient_role": "CISO",
+          "title": "Stakeholder Update Required",
+          "message": "Executive stakeholder update required on external incident response team engagement and expected timeline. Prepare briefing on cost implications and response strategy.",
+          "severity": "medium",
+          "category": "stakeholder_update"
+        },
+        {
+          "alert_id": "ALERT_OUT_007",
+          "time": "T+09:30",
+          "recipient_role": "PR_HEAD",
+          "title": "External Support Communication",
+          "message": "Prepare communications regarding engagement of external security specialists. Ensure messaging maintains confidence in organizational security capabilities.",
+          "severity": "low",
+          "category": "external_communication"
+        },
+        {
+          "alert_id": "ALERT_OUT_008",
+          "time": "T+10:30",
+          "recipient_role": "PR_HEAD",
+          "title": "Public Statement Preparation",
+          "message": "Prepare public statement regarding security incident and response measures. Coordinate messaging with legal team and external incident response specialists.",
+          "severity": "medium",
+          "category": "public_statement"
+        },
+        {
+          "alert_id": "ALERT_OUT_009",
+          "time": "T+10:30",
+          "recipient_role": "LEGAL_HEAD",
+          "title": "Legal Review Required",
+          "message": "Legal review required for all public statements and communications regarding the security incident. Ensure compliance with regulatory requirements and liability protection.",
+          "severity": "medium",
+          "category": "legal_review"
+        }
+      ],
+      "ending": {
+        "time": "T+12:00",
+        "type": "high_impact_ending",
+        "title": "Third-party Decision Making - High Impact Risk",
+        "description": "Reliance on external incident response specialists resulted in loss of direct control over incident management. While expertise was gained, decision-making delays and coordination challenges led to extended impact. The incident response was thorough but costly and time-consuming."
+      }
+    }
+  },
+  "roles": {
+    "SOC_ANALYST": {
+      "name": "Security Operations Center Analyst",
+      "description": "Front-line security analyst responsible for monitoring, detection, and initial incident response",
+      "escalation_path": ["SOC_LEAD"],
+      "responsibilities": ["threat_detection", "alert_investigation", "evidence_collection", "monitoring"]
+    },
+    "SOC_LEAD": {
+      "name": "Security Operations Center Lead",
+      "description": "Senior security analyst managing SOC operations and incident response coordination",
+      "escalation_path": ["CISO"],
+      "responsibilities": ["incident_coordination", "threat_analysis", "team_management", "escalation_decisions"]
+    },
+    "CISO": {
+      "name": "Chief Information Security Officer",
+      "description": "Executive responsible for organizational cybersecurity strategy and major incident decisions",
+      "escalation_path": ["CEO", "BOARD"],
+      "responsibilities": ["strategic_decisions", "executive_reporting", "risk_management", "stakeholder_communication"]
+    },
+    "IT_HEAD": {
+      "name": "Head of Information Technology",
+      "description": "Senior IT executive responsible for infrastructure, operations, and technical response",
+      "escalation_path": ["CTO", "CISO"],
+      "responsibilities": ["infrastructure_management", "technical_response", "system_operations", "disaster_recovery"]
+    },
+    "LEGAL_HEAD": {
+      "name": "Head of Legal/General Counsel",
+      "description": "Senior legal executive responsible for compliance, regulatory, and legal aspects of incident response",
+      "escalation_path": ["CEO"],
+      "responsibilities": ["regulatory_compliance", "legal_risk_assessment", "contract_management", "regulatory_notifications"]
+    },
+    "PR_HEAD": {
+      "name": "Head of Public Relations/Communications",
+      "description": "Senior communications executive responsible for crisis communications and stakeholder messaging",
+      "escalation_path": ["CEO"],
+      "responsibilities": ["crisis_communications", "stakeholder_messaging", "media_relations", "reputation_management"]
+    },
+    "CEO": {
+      "name": "Chief Executive Officer",
+      "description": "Chief executive responsible for ultimate organizational decisions and external stakeholder relations",
+      "escalation_path": ["BOARD"],
+      "responsibilities": ["executive_decisions", "board_reporting", "stakeholder_relations", "business_continuity"]
+    },
+    "BOARD": {
+      "name": "Board of Directors",
+      "description": "Governing body responsible for oversight of major organizational crises and strategic decisions",
+      "escalation_path": [],
+      "responsibilities": ["governance_oversight", "strategic_approval", "fiduciary_responsibility", "stakeholder_representation"]
+    }
+  },
+  "severity_levels": {
+    "low": {
+      "color": "#4CAF50",
+      "priority": 1,
+      "response_time": 240,
+      "escalation_required": false
+    },
+    "medium": {
+      "color": "#FF9800", 
+      "priority": 2,
+      "response_time": 120,
+      "escalation_required": false
+    },
+    "high": {
+      "color": "#F44336",
+      "priority": 3,
+      "response_time": 60,
+      "escalation_required": true
+    },
+    "critical": {
+      "color": "#9C27B0",
+      "priority": 4,
+      "response_time": 30,
+      "escalation_required": true
+    }
+  },
+  "categories": {
+    "ai_security": {
+      "name": "AI Security",
+      "description": "Artificial intelligence system security and safety incidents"
+    },
+    "system_performance": {
+      "name": "System Performance", 
+      "description": "IT system performance and operational issues"
+    },
+    "security_incident": {
+      "name": "Security Incident",
+      "description": "Confirmed cybersecurity incidents requiring response"
+    },
+    "monitoring": {
+      "name": "Monitoring",
+      "description": "Security monitoring and surveillance activities"
+    },
+    "threat_intelligence": {
+      "name": "Threat Intelligence",
+      "description": "Threat analysis and intelligence gathering activities"
+    },
+    "assessment": {
+      "name": "Assessment",
+      "description": "Security and impact assessment activities"
+    },
+    "escalation": {
+      "name": "Escalation",
+      "description": "Incident escalation and external support requests"
+    },
+    "legal": {
+      "name": "Legal",
+      "description": "Legal and compliance related activities"
+    },
+    "forensics": {
+      "name": "Digital Forensics",
+      "description": "Digital forensics and evidence collection activities"
+    },
+    "evidence": {
+      "name": "Evidence Management",
+      "description": "Evidence collection and preservation activities"
+    },
+    "threat_analysis": {
+      "name": "Threat Analysis",
+      "description": "Advanced threat analysis and investigation"
+    },
+    "confirmation": {
+      "name": "Incident Confirmation",
+      "description": "Incident verification and confirmation activities"
+    },
+    "technical_analysis": {
+      "name": "Technical Analysis",
+      "description": "Technical system and infrastructure analysis"
+    },
+    "business_impact": {
+      "name": "Business Impact",
+      "description": "Business impact assessment and analysis"
+    },
+    "legal_compliance": {
+      "name": "Legal Compliance",
+      "description": "Legal compliance and regulatory requirements"
+    },
+    "containment": {
+      "name": "Containment",
+      "description": "Threat containment and isolation activities"
+    },
+    "surveillance": {
+      "name": "Surveillance",
+      "description": "Active surveillance and monitoring operations"
+    },
+    "business_continuity": {
+      "name": "Business Continuity",
+      "description": "Business continuity and disaster recovery planning"
+    },
+    "communication": {
+      "name": "Communication",
+      "description": "Internal and external communication activities"
+    },
+    "legal_preparation": {
+      "name": "Legal Preparation",
+      "description": "Legal preparation and compliance readiness"
+    },
+    "crisis_communications": {
+      "name": "Crisis Communications",
+      "description": "Crisis communication and public relations"
+    },
+    "system_shutdown": {
+      "name": "System Shutdown",
+      "description": "Planned system shutdown and service interruption"
+    },
+    "disaster_recovery": {
+      "name": "Disaster Recovery",
+      "description": "Disaster recovery and backup system activation"
+    },
+    "customer_communication": {
+      "name": "Customer Communication",
+      "description": "Customer notification and service communication"
+    },
+    "expert_consultation": {
+      "name": "Expert Consultation",
+      "description": "External expert consultation and guidance"
+    },
+    "expert_guidance": {
+      "name": "Expert Guidance",
+      "description": "Implementation of expert recommendations"
+    },
+    "executive_briefing": {
+      "name": "Executive Briefing",
+      "description": "Executive level briefings and reporting"
+    },
+    "legal_review": {
+      "name": "Legal Review",
+      "description": "Legal review and approval processes"
+    },
+    "pr_coordination": {
+      "name": "PR Coordination",
+      "description": "Public relations coordination and messaging"
+    },
+    "crisis_communication": {
+      "name": "Crisis Communication",
+      "description": "Crisis communication and emergency messaging"
+    },
+    "executive_approval": {
+      "name": "Executive Approval",
+      "description": "Executive approval and authorization processes"
+    },
+    "board_notification": {
+      "name": "Board Notification",
+      "description": "Board of directors notification and reporting"
+    },
+    "crisis_management": {
+      "name": "Crisis Management",
+      "description": "Crisis management and coordination activities"
+    },
+    "regulatory_compliance": {
+      "name": "Regulatory Compliance",
+      "description": "Regulatory compliance and notification requirements"
+    },
+    "access_control": {
+      "name": "Access Control",
+      "description": "Access control and privilege management"
+    },
+    "data_protection": {
+      "name": "Data Protection",
+      "description": "Data protection and security measures"
+    },
+    "service_limitation": {
+      "name": "Service Limitation",
+      "description": "Service limitation and operational restrictions"
+    },
+    "containment_success": {
+      "name": "Containment Success",
+      "description": "Successful containment and mitigation activities"
+    },
+    "system_sanitization": {
+      "name": "System Sanitization",
+      "description": "System cleaning and security validation"
+    },
+    "external_engagement": {
+      "name": "External Engagement",
+      "description": "External party engagement and coordination"
+    },
+    "legal_authorization": {
+      "name": "Legal Authorization",
+      "description": "Legal authorization and contract approval"
+    },
+    "insurance_claim": {
+      "name": "Insurance Claim",
+      "description": "Insurance claim and coverage coordination"
+    },
+    "insurance_coordination": {
+      "name": "Insurance Coordination",
+      "description": "Insurance provider coordination and management"
+    },
+    "team_assignment": {
+      "name": "Team Assignment",
+      "description": "External team assignment and coordination"
+    },
+    "stakeholder_update": {
+      "name": "Stakeholder Update",
+      "description": "Stakeholder communication and updates"
+    },
+    "external_communication": {
+      "name": "External Communication",
+      "description": "External communication and messaging"
+    },
+    "public_statement": {
+      "name": "Public Statement",
+      "description": "Public statement and media communication"
+    }
+  },
+  "game_mechanics": {
+    "scoring": {
+      "perfect_response": 100,
+      "good_response": 75,
+      "adequate_response": 50,
+      "poor_response": 25,
+      "missed_response": 0,
+      "escalation_bonus": 10,
+      "timeline_penalty": -5
+    },
+    "time_pressure": {
+      "escalation_multiplier": 1.5,
+      "critical_time_multiplier": 2.0,
+      "decision_time_limit": 300
+    },
+    "difficulty_settings": {
+      "novice": {
+        "alert_frequency": 0.7,
+        "escalation_time": 1.5,
+        "hint_availability": true
+      },
+      "intermediate": {
+        "alert_frequency": 1.0,
+        "escalation_time": 1.0,
+        "hint_availability": false
+      },
+      "expert": {
+        "alert_frequency": 1.3,
+        "escalation_time": 0.7,
+        "hint_availability": false
+      }
+    }
+  },
+  "learning_objectives": [
+    "Understanding AI security threats and jailbreak attacks",
+    "Incident response decision making under pressure",
+    "Cross-functional team coordination during security incidents",
+    "Balancing business continuity with security containment",
+    "Communication and escalation procedures",
+    "Legal and regulatory compliance in incident response",
+    "Risk assessment and impact analysis",
+    "Resource allocation and external expert engagement"
+  ],
+  "debrief_questions": [
+    "What were the key decision points that influenced the incident outcome?",
+    "How effectively did the team coordinate across different functional areas?",
+    "What trade-offs were made between security and business continuity?",
+    "How could the initial detection and response time have been improved?",
+    "What role did external expertise play in the incident resolution?",
+    "How well did the communication strategy serve stakeholder needs?",
+    "What lessons learned should be incorporated into future incident response procedures?",
+    "How did the AI-specific nature of this threat impact response strategies?"
+  ]
+}
