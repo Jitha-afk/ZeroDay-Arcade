@@ -7,6 +7,7 @@ import { HamburgerMenuIcon } from '@radix-ui/react-icons';
 import { usePathname } from 'next/navigation';
 import { cn } from '@/lib/utils';
 
+// TODO: don't show this on the cyberwarsim page
 const navItems = [
   { href: '#team-section', label: 'Team' },
   { href: '#features', label: 'Features' },

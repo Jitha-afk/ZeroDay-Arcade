@@ -4,6 +4,7 @@ import { useLayoutEffect, useRef } from 'react';
 import { Button } from '@/components/ui/button';
 import { UnicornBackground } from '@/components/unicorn-background';
 import gsap from 'gsap';
+import { useRouter } from 'next/navigation';
 
 // Utility to split a phrase into word wrappers (overflow-hidden) and character spans.
 function SplitHeadline({
@@ -46,6 +47,7 @@ function SplitHeadline({
 
 export function Hero() {
   const rootRef = useRef<HTMLHeadingElement | null>(null);
+  const router = useRouter();
 
   useLayoutEffect(() => {
     if (!rootRef.current) return;
@@ -101,7 +103,7 @@ export function Hero() {
               </div>
             </h1>
             <div>
-              <Button size="lg">Try It Out</Button>
+              <Button size="lg" onClick={() => router.push('/cyberwarsim')}>Try It Out</Button>
             </div>
           </div>
         </div>
