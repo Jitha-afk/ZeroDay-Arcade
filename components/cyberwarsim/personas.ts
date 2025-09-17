@@ -1,0 +1,9 @@
+export const PERSONAS = {
+  CISO: "CISO",
+  SOC_LEAD: "SOC_LEAD",
+  SOC_ANALYST: "SOC_ANALYST",
+  IT_HEAD: "IT_HEAD",
+  PR_HEAD: "PR_HEAD",
+  CEO: "CEO",
+  LEGAL_HEAD: "LEGAL_HEAD",
+} as const;
