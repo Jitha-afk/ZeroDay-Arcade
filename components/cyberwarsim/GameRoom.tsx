@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useRouter } from 'next/navigation';
 import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
 import { Button } from "../ui/button";
@@ -27,31 +27,13 @@ export default function GameRoom({ currentPlayer: propPlayer, onLeaveGame }: Gam
   const [players, setPlayers] = useState<Array<any>>([]);
   const [currentPlayer, setCurrentPlayer] = useState<{ name: string; persona: string } | null>(propPlayer || null);
   const [scenarioEvents, setScenarioEvents] = React.useState<Array<any>>([]);
-  const [scenarioData, setScenarioData] = React.useState<any | null>(null); // full scenario for dynamic path loading
-  const [chosenPaths, setChosenPaths] = React.useState<Set<string>>(new Set());
-  const [lockedDecisionGroups, setLockedDecisionGroups] = React.useState<Set<string>>(new Set()); // ensures only one branch per decision group
-  const [resolvedEvents, setResolvedEvents] = React.useState<Record<string, {decision: string; reasoning: string}>>({});
+  interface Resolution { decision: string; decisionLabel?: string; reasoning: string; manual?: boolean }
+  const [resolvedEvents, setResolvedEvents] = React.useState<Record<string, Resolution>>({});
   // load persisted resolved events from sessionStorage
   useEffect(() => {
     try {
       const raw = sessionStorage.getItem('cyberwarsim_resolved');
-      if (raw) {
-        const parsed = JSON.parse(raw);
-        // Remove any legacy placeholder resolutions that block real decision input
-        const cleaned: Record<string, {decision: string; reasoning: string}> = {};
-        Object.entries(parsed).forEach(([k,v]: any) => {
-          if (!v || typeof v !== 'object') return;
-            if ((v.reasoning || '').toLowerCase().includes('user reasoning placeholder')) {
-              // skip, forcing re-decision opportunity
-              return;
-            }
-            cleaned[k] = v;
-        });
-        if (Object.keys(cleaned).length !== Object.keys(parsed).length) {
-          try { sessionStorage.setItem('cyberwarsim_resolved', JSON.stringify(cleaned)); } catch {}
-        }
-        setResolvedEvents(cleaned);
-      }
+      if (raw) setResolvedEvents(JSON.parse(raw));
     } catch (e) {
       // ignore
     }
@@ -71,6 +53,14 @@ export default function GameRoom({ currentPlayer: propPlayer, onLeaveGame }: Gam
   const [displayedEvents, setDisplayedEvents] = React.useState<Array<any>>([]);
   const [processingIndex, setProcessingIndex] = React.useState<number>(0);
   const [waitingEventId, setWaitingEventId] = React.useState<string | null>(null);
+  const [isAdvancing, setIsAdvancing] = React.useState<boolean>(false); // controls delay cycle
+  const ADVANCE_DELAY_SECONDS = 10; // 10 second delay between non-decision events
+  const [nextDelayRemaining, setNextDelayRemaining] = React.useState<number>(0); // seconds until next event
+  const [chosenPaths, setChosenPaths] = React.useState<string[]>([]); // record of loaded decision paths
+  const scenarioRef = useRef<any>(null); // full scenario data for branching
+
+  // Normalize role strings to internal persona keys (e.g., "SOC Analyst" -> "SOC_ANALYST")
+  const normalizeRole = (role: string) => role?.trim().toUpperCase().replace(/[\s-]+/g, '_');
 
   useEffect(() => {
     if (!propPlayer) {
@@ -86,7 +76,6 @@ export default function GameRoom({ currentPlayer: propPlayer, onLeaveGame }: Gam
             // Build scenario events from initial_timeline and alerts
             try {
               const events: any[] = [];
-              setScenarioData(parsed.scenario);
 
               const addFromTimeline = (timeline: any[] = []) => {
                 timeline.forEach((ev: any, idx: number) => {
@@ -139,6 +128,7 @@ export default function GameRoom({ currentPlayer: propPlayer, onLeaveGame }: Gam
               // set scenario events sorted by scheduledTime
               events.sort((a, b) => (a.scheduledTime || 0) - (b.scheduledTime || 0));
               setScenarioEvents(events);
+              scenarioRef.current = parsed.scenario;
             } catch (e) {
               console.error('Failed to parse scenario initial timeline', e);
             }
@@ -164,7 +154,6 @@ export default function GameRoom({ currentPlayer: propPlayer, onLeaveGame }: Gam
             // Build scenario events from initial_timeline and alerts
             try {
               const events: any[] = [];
-              setScenarioData(parsed.scenario);
 
               const addFromTimeline = (timeline: any[] = []) => {
                 timeline.forEach((ev: any, idx: number) => {
@@ -217,6 +206,7 @@ export default function GameRoom({ currentPlayer: propPlayer, onLeaveGame }: Gam
               // set scenario events sorted by scheduledTime
               events.sort((a, b) => (a.scheduledTime || 0) - (b.scheduledTime || 0));
               setScenarioEvents(events);
+              scenarioRef.current = parsed.scenario;
             } catch (e) {
               console.error('Failed to parse scenario initial timeline', e);
             }
@@ -228,83 +218,113 @@ export default function GameRoom({ currentPlayer: propPlayer, onLeaveGame }: Gam
     }
   }, [propPlayer]);
 
-  // Auto-resolve decision points that are not relevant to current player's role
+  // NOTE: Previously there was an auto-resolve effect here that picked a random option for
+  // decision points not matching the player's role. This caused user-selected decisions
+  // to be preempted. It has been removed so the player can always manually choose when
+  // a relevant decision point appears. Non-relevant decision points will simply pass
+  // through the timeline without automatic resolution.
+
+  // Cleanup: Remove any legacy "auto-resolved" decisions that actually belong to the current player's role.
+  // Also roll back any path events that were appended because of those auto resolutions so the player can now choose.
   useEffect(() => {
     if (!currentPlayer || scenarioEvents.length === 0) return;
-    const unresolved = scenarioEvents.filter(ev => ev.eventType === 'decision_point' && !resolvedEvents[ev.id]);
-    unresolved.forEach(ev => {
-      const recipient = ev.recipientRole;
-      const isRelevant = !recipient || (Array.isArray(recipient) ? recipient.includes(currentPlayer.persona) : recipient === currentPlayer.persona);
-      if (!isRelevant && ev.options && ev.options.length > 0) {
-        // pick randomly, and now also branch if the option has a path
-        const choice = ev.options[Math.floor(Math.random() * ev.options.length)];
-        handleEventDecision(ev.id, choice.id, 'Auto-resolved by system (not your role)', choice.path);
-      }
-    });
-  }, [scenarioEvents, currentPlayer, resolvedEvents]);
+    const playerRole = normalizeRole(currentPlayer.persona);
+    let removedSomething = false;
+    const removedPathKeys: string[] = [];
 
-  // Initial load reset (avoid resetting when we append new events due to path decisions)
-  const [initialScenarioLoaded, setInitialScenarioLoaded] = useState(false);
-  useEffect(() => {
-    if (!scenarioEvents || scenarioEvents.length === 0) return;
-    if (!initialScenarioLoaded) {
-      setDisplayedEvents([]);
-      setProcessingIndex(0);
-      setWaitingEventId(null);
-      setInitialScenarioLoaded(true);
-    }
-  }, [scenarioEvents, initialScenarioLoaded]);
-
-  // Sequentially process scenario events immediately (no real time). Pause when a decision requires current player's action.
-  useEffect(() => {
-    if (!scenarioEvents || scenarioEvents.length === 0) return;
-    if (waitingEventId) return; // waiting for player decision
-
-    let idx = processingIndex;
-    const processSequential = () => {
-      while (idx < scenarioEvents.length) {
-        const ev = scenarioEvents[idx];
-        // append event to displayed events
-        setDisplayedEvents(prev => {
-          // avoid duplicate append if already present
-          if (prev.find(p => p.id === ev.id)) return prev;
-          return [...prev, { ...ev, triggered: true }];
-        });
-
-        if (ev.eventType !== 'decision_point') {
-          idx += 1;
-          setProcessingIndex(idx);
-          continue;
-        }
-
-        // decision point: determine if current player is the intended recipient
+    setResolvedEvents(prev => {
+      const next = { ...prev } as typeof prev;
+      scenarioEvents.forEach(ev => {
+        if (ev.eventType !== 'decision_point') return;
+        const res = next[ev.id];
+        if (!res) return;
+        // Identify legacy auto or non-manual (no manual flag) resolutions
+        const isLegacyAuto = !res.manual;
         const recipient = ev.recipientRole;
-        const isRelevant = currentPlayer && (!recipient || (Array.isArray(recipient) ? recipient.includes(currentPlayer.persona) : recipient === currentPlayer.persona));
-
+        const matchRecipient = (r: any) => normalizeRole(r) === playerRole;
+        const isRelevant = (!recipient || (Array.isArray(recipient) ? recipient.some(matchRecipient) : matchRecipient(recipient)));
         if (isRelevant) {
-          // pause processing and wait for this player's action
-          setWaitingEventId(ev.id);
-          setProcessingIndex(idx); // keep index where we paused
-          return;
-        } else {
-          // auto-resolve for non-relevant roles
-          if (ev.options && ev.options.length > 0) {
-            const choice = ev.options[Math.floor(Math.random() * ev.options.length)];
-            // delegate to shared handler so branching also occurs
-            handleEventDecision(ev.id, choice.id, 'Auto-resolved by system (not the intended role)', choice.path);
+          // Find path key that may have been enqueued
+          if (ev.options) {
+            const opt = ev.options.find((o: any) => o.id === res.decision && o.path);
+            if (opt && opt.path) {
+              removedPathKeys.push(opt.path);
+            }
           }
-          idx += 1;
-          setProcessingIndex(idx);
-          continue;
+          delete next[ev.id];
+          removedSomething = true;
         }
+      });
+      if (removedSomething) {
+        try {
+          sessionStorage.setItem('cyberwarsim_resolved', JSON.stringify(next));
+          try { localStorage.setItem('cyberwarsim_resolved_sync', JSON.stringify(next)); localStorage.removeItem('cyberwarsim_resolved_sync'); } catch {}
+        } catch {}
       }
-      // finished processing
-      setProcessingIndex(idx);
+      return removedSomething ? next : prev;
+    });
+
+    if (removedPathKeys.length > 0) {
+      // Remove enqueued path events tied to removed auto decisions so user can legitimately pick a branch now.
+      setScenarioEvents(prev => prev.filter(ev => !removedPathKeys.some(pk => ev.id.startsWith(`path_${pk}_`))));
+      setChosenPaths(prev => {
+        const updated = prev.filter(pk => !removedPathKeys.includes(pk));
+        try { sessionStorage.setItem('cyberwarsim_paths', JSON.stringify(updated)); } catch {}
+        return updated;
+      });
+    }
+  }, [currentPlayer, scenarioEvents]);
+
+  // Initialization guard so we only reset timeline once per loaded scenario (avoid jump after path append)
+  const initializedRef = useRef(false);
+  useEffect(() => {
+    if (!scenarioEvents || scenarioEvents.length === 0) return;
+    if (initializedRef.current) return; // already initialized; do not wipe timeline on subsequent scenarioEvents changes
+    setDisplayedEvents([]);
+    setProcessingIndex(0);
+    setWaitingEventId(null);
+    initializedRef.current = true;
+  }, [scenarioEvents]);
+
+  // Timed sequential progression: add one event, then wait (20s) before adding next unless a decision point pauses progression.
+  useEffect(() => {
+    if (!scenarioEvents || scenarioEvents.length === 0) return;
+  if (waitingEventId) return; // paused awaiting user decision
+    if (processingIndex >= scenarioEvents.length) return; // done
+  if (isAdvancing) return; // currently in delay window
+
+    const currentEvent = scenarioEvents[processingIndex];
+    if (!currentEvent) return;
+
+    const appendEvent = () => {
+      setDisplayedEvents(prev => {
+        if (prev.find(p => p.id === currentEvent.id)) return prev; // already appended
+        return [...prev, { ...currentEvent, triggered: true }];
+      });
+
+      // If it's a decision point, determine relevance
+      if (currentEvent.eventType === 'decision_point') {
+        const recipient = currentEvent.recipientRole;
+        const playerRole = currentPlayer ? normalizeRole(currentPlayer.persona) : null;
+        const matchRecipient = (r: any) => playerRole && normalizeRole(r) === playerRole;
+        const isRelevant = currentPlayer && (!recipient || (Array.isArray(recipient) ? recipient.some(matchRecipient) : matchRecipient(recipient)));
+        if (isRelevant) {
+          // pause for player action; do not advance index yet (decision will increment after resolution)
+          setWaitingEventId(currentEvent.id);
+          return; // stop here; user will continue
+        }
+        // If not relevant, we now simply allow timeline to continue without auto-picking a path.
+      }
+
+      // Advance index for non-pausing events and start delay cycle for next event
+      setProcessingIndex(prev => prev + 1);
+      setIsAdvancing(true);
+      setNextDelayRemaining(ADVANCE_DELAY_SECONDS);
     };
 
-    // kick off processing
-    processSequential();
-  }, [scenarioEvents, processingIndex, waitingEventId, currentPlayer]);
+    // Append current event immediately when effect triggers
+    appendEvent();
+  }, [scenarioEvents, processingIndex, waitingEventId, isAdvancing, currentPlayer]);
 
   const getPersonaEvents = (persona: string) => {
     const allEvents: Record<string, any> = {
@@ -323,90 +343,22 @@ export default function GameRoom({ currentPlayer: propPlayer, onLeaveGame }: Gam
   // Use displayedEvents (processed sequentially) as the timeline visible to all players
   const personaEvents = displayedEvents.length > 0 ? displayedEvents : (currentPlayer ? [...getPersonaEvents(currentPlayer.persona), ...scenarioEvents] : scenarioEvents);
 
-  // Auto-scroll: keep a ref to timeline list container
-  const timelineRef = React.useRef<HTMLDivElement | null>(null);
-  useEffect(() => {
-    const el = timelineRef.current;
-    if (!el) return;
-    // Always scroll to bottom on new events (could enhance later with user proximity detection)
-    el.scrollTo({ top: el.scrollHeight, behavior: 'smooth' });
-  }, [personaEvents.length]);
-
-  const buildEventsFromPath = (pathKey: string): any[] => {
-    if (!scenarioData || !scenarioData.decision_paths) return [];
-    const pathDef = scenarioData.decision_paths[pathKey];
-    if (!pathDef) return [];
-    const events: any[] = [];
-    // helper reuse (duplicate of earlier parse but safe)
-    const parseTimeStringToSeconds = (timeStr: string) => {
-      try {
-        if (!timeStr || typeof timeStr !== 'string') return 0;
-        const cleaned = timeStr.replace(/^T\+/, '');
-        const parts = cleaned.split(':').map(p => parseInt(p.replace(/^0+/, '') || '0', 10));
-        if (parts.length === 1) return parts[0] * 60;
-        if (parts.length === 2) return parts[0] * 60 + parts[1];
-        if (parts.length === 3) return parts[0] * 3600 + parts[1] * 60 + parts[2];
-      } catch (e) { return 0; }
-      return 0;
-    };
-
-    // Alerts
-    (pathDef.alerts || []).forEach((alert: any, idx: number) => {
-      events.push({
-        id: `${pathKey}_alert_${idx}_${Date.now()}`,
-        title: alert.title || alert.event || `Alert ${idx}`,
-        description: alert.message || alert.description || '',
-        eventType: alert.decision_required ? 'decision_point' : 'alert',
-        severity: alert.severity || 'medium',
-        scheduledTime: parseTimeStringToSeconds(alert.time) || 0,
-        isTriggered: !!alert.automatic || false,
-        options: alert.decision_required?.options?.map((o: any) => ({ id: o.id, label: o.label, description: o.description, path: o.path })) || [],
-        recipientRole: alert.recipient_role || alert.recipientRole || null,
-        decisionRequired: !!alert.decision_required
-      });
-    });
-    // Sub-decisions (convert into decision_point events)
-    if (pathDef.sub_decisions) {
-      Object.values(pathDef.sub_decisions).forEach((sub: any) => {
-        events.push({
-          id: `${pathKey}_sub_${sub.decision_id || sub.title}_${Date.now()}`,
-            title: sub.title || sub.decision_id || 'Decision',
-            description: sub.description || 'Follow-up decision required.',
-            eventType: 'decision_point',
-            severity: sub.severity || 'high',
-            scheduledTime: parseTimeStringToSeconds(sub.time) || 0,
-            isTriggered: true,
-            options: (sub.options || []).map((o: any) => ({ id: o.id, label: o.label, description: o.description, path: o.path })),
-            recipientRole: sub.recipient_role || null,
-            decisionRequired: true
-        });
-      });
-    }
-    // Ending treated as an alert (non decision)
-    if (pathDef.ending) {
-      const end = pathDef.ending;
-      events.push({
-        id: `${pathKey}_ending_${Date.now()}`,
-        title: end.title || 'Scenario Ending',
-        description: end.description || '',
-        eventType: 'ending',
-        endingType: end.type || 'unknown',
-        severity: end.type === 'good_ending' ? 'medium' : end.type === 'bad_ending' ? 'critical' : 'high',
-        scheduledTime: parseTimeStringToSeconds(end.time) || 0,
-        isTriggered: true,
-        options: [],
-        recipientRole: null,
-        decisionRequired: false
-      });
-    }
-    return events;
-  };
-
-  const handleEventDecision = (eventId: string, decision: string, reasoning: string, path?: string) => {
+  const handleEventDecision = (eventId: string, decision: string, reasoning: string) => {
     console.log("Event decision:", { eventId, decision, reasoning });
-    const resolution = { decision, reasoning };
+
+    // Determine if chosen decision points to a path and enqueue that path's events
+    const eventObj = scenarioEvents.find(ev => ev.id === eventId) || displayedEvents.find(ev => ev.id === eventId);
+    let decisionLabel: string | undefined = undefined;
+    if (eventObj && eventObj.options) {
+      const opt = eventObj.options.find((o: any) => o.id === decision);
+      if (opt) {
+        decisionLabel = opt.label || decision;
+        if (opt.path) enqueueDecisionPath(opt.path);
+      }
+    }
+    const resolution: Resolution = { decision, decisionLabel, reasoning, manual: true };
     setResolvedEvents(prev => {
-      if (prev[eventId]) return prev; // already resolved
+      if (prev[eventId] && prev[eventId].manual) return prev; // already resolved manually
       const next = { ...prev, [eventId]: resolution };
       // persist resolved decisions so they survive reloads and notify other clients
       try {
@@ -423,31 +375,126 @@ export default function GameRoom({ currentPlayer: propPlayer, onLeaveGame }: Gam
     if (waitingEventId === eventId) {
       setWaitingEventId(null);
       setProcessingIndex(prev => prev + 1);
-    }
-    // Mutually-exclusive branching:
-    // Derive a decision grouping token from the original event ID (strip dynamic suffix patterns)
-    // Example ids: scenario_alert_2, monitor_path_sub_MON_CONTAINMENT_DECISION_<ts>
-    const baseGroup = eventId
-      .replace(/_alert_.*/, '_alert')
-      .replace(/_sub_.*/, '_sub')
-      .replace(/_ending_.*/, '_ending');
-    if (!lockedDecisionGroups.has(baseGroup) && path) {
-      // lock this group so parallel auto-resolve or race conditions can't spawn additional branches
-      setLockedDecisionGroups(prev => new Set([...Array.from(prev), baseGroup]));
-      if (!chosenPaths.has(path)) {
-        const newPathEvents = buildEventsFromPath(path);
-        if (newPathEvents.length > 0) {
-          setScenarioEvents(prev => {
-            const merged = [...prev, ...newPathEvents];
-            merged.sort((a, b) => (a.scheduledTime || 0) - (b.scheduledTime || 0));
-            return merged;
-          });
-          setChosenPaths(prev => new Set([...Array.from(prev), path]));
-          setProcessingIndex(displayedEvents.length + 1);
-        }
-      }
+      // start delay cycle before next event
+      setIsAdvancing(true);
+      setNextDelayRemaining(ADVANCE_DELAY_SECONDS);
     }
   };
+
+  // Helper: parse time string to seconds (duplicated from earlier scope for reuse)
+  const parseTimeStringToSeconds = (timeStr: string) => {
+    try {
+      if (!timeStr || typeof timeStr !== 'string') return 0;
+      const cleaned = timeStr.replace(/^T\+/, '');
+      const parts = cleaned.split(':').map(p => parseInt(p.replace(/^0+/, '') || '0', 10));
+      if (parts.length === 1) return parts[0] * 60;
+      if (parts.length === 2) return parts[0] * 60 + parts[1];
+      if (parts.length === 3) return parts[0] * 3600 + parts[1] * 60 + parts[2];
+    } catch (e) { return 0; }
+    return 0;
+  };
+
+  // Enqueue events for a decision path if not already chosen
+  const enqueueDecisionPath = (pathKey: string) => {
+    if (!scenarioRef.current || !scenarioRef.current.decision_paths) return;
+    if (chosenPaths.includes(pathKey)) return; // already loaded
+    const pathData = scenarioRef.current.decision_paths[pathKey];
+    if (!pathData) return;
+
+    const newEvents: any[] = [];
+    // Alerts
+    (pathData.alerts || []).forEach((alert: any, idx: number) => {
+      newEvents.push({
+        id: `path_${pathKey}_alert_${idx}`,
+        title: alert.title || alert.event || `Alert ${idx}`,
+        description: alert.message || alert.description || '',
+        eventType: alert.decision_required ? 'decision_point' : 'alert',
+        severity: alert.severity || 'medium',
+        scheduledTime: parseTimeStringToSeconds(alert.time) || 0,
+        isTriggered: !!alert.automatic || false,
+        options: alert.decision_required?.options?.map((o: any) => ({ id: o.id, label: o.label, description: o.description, path: o.path })) || [],
+        recipientRole: alert.recipient_role || alert.recipientRole || null,
+        decisionRequired: !!alert.decision_required
+      });
+    });
+    // Sub decisions
+    const subs = pathData.sub_decisions || {};
+    Object.keys(subs).forEach((key) => {
+      const sd = subs[key];
+      newEvents.push({
+        id: `path_${pathKey}_subdecision_${key}`,
+        title: sd.title || sd.decision_id || key,
+        description: sd.description || '',
+        eventType: 'decision_point',
+        severity: 'high',
+        scheduledTime: parseTimeStringToSeconds(sd.time) || 0,
+        isTriggered: true,
+        options: (sd.options || []).map((o: any) => ({ id: o.id, label: o.label, description: o.description, path: o.path })),
+        recipientRole: sd.recipient_role || sd.recipientRole || null,
+        decisionRequired: true
+      });
+    });
+    // Ending
+    if (pathData.ending) {
+      const end = pathData.ending;
+      newEvents.push({
+        id: `path_${pathKey}_ending`,
+        title: end.title || 'Ending',
+        description: end.description || '',
+        eventType: 'ending',
+        severity: end.type || 'info',
+        scheduledTime: parseTimeStringToSeconds(end.time) || 0,
+        isTriggered: true
+      });
+    }
+
+    if (newEvents.length > 0) {
+      // Append without re-sorting already processed events; times are scenario relative and later
+      setScenarioEvents(prev => [...prev, ...newEvents]);
+      setChosenPaths(prev => {
+        const updated = [...prev, pathKey];
+        try { sessionStorage.setItem('cyberwarsim_paths', JSON.stringify(updated)); } catch {}
+        return updated;
+      });
+    }
+  };
+
+  // If a waiting decision somehow got resolved externally (storage sync) auto-advance.
+  useEffect(() => {
+    if (waitingEventId && resolvedEvents[waitingEventId]) {
+      setWaitingEventId(null);
+      setProcessingIndex(prev => prev + 1);
+      setIsAdvancing(true);
+      setNextDelayRemaining(ADVANCE_DELAY_SECONDS);
+    }
+  }, [waitingEventId, resolvedEvents]);
+
+  // Acknowledge (skip) current delay to immediately show next event
+  const acknowledgeDelay = () => {
+    if (!isAdvancing || waitingEventId) return; // only skip during passive delay
+    setNextDelayRemaining(0); // this will cause countdown effect to flip isAdvancing false
+  };
+
+  // Countdown interval for visual indicator
+  useEffect(() => {
+    if (!isAdvancing) return;
+    if (nextDelayRemaining <= 0) {
+      // end of delay cycle -> allow next effect run to append next event
+      setIsAdvancing(false);
+      return;
+    }
+    const int = setInterval(() => {
+      setNextDelayRemaining(prev => {
+        if (prev <= 1) {
+          // finishing countdown
+            setIsAdvancing(false);
+            return 0;
+        }
+        return prev - 1;
+      });
+    }, 1000);
+    return () => clearInterval(int);
+  }, [isAdvancing, nextDelayRemaining]);
 
   const handleRoomChange = (room: string) => {
     setCurrentRoom(room);
@@ -574,22 +621,32 @@ export default function GameRoom({ currentPlayer: propPlayer, onLeaveGame }: Gam
                     <CardHeader>
                       <CardTitle className="font-mono">INCIDENT_TIMELINE</CardTitle>
                     </CardHeader>
-                    <CardContent className="h-full overflow-auto" ref={timelineRef}>
-                      <div className="space-y-4 pb-24">
-                        {personaEvents.map((event: any) => (
-                          <TimelineEvent
-                            key={event.id}
-                            {...event}
-                            targetPersonas={event.recipientRole ? (Array.isArray(event.recipientRole) ? event.recipientRole : [event.recipientRole]) : []}
-                            isVisible={true}
-                            onDecision={handleEventDecision}
-                            resolution={resolvedEvents[event.id] || event.resolution}
-                            allowDecision={
-                              // allow decision only when waiting on this event and the current player is intended recipient
-                              event.eventType === 'decision_point' && waitingEventId === event.id && currentPlayer && ( !event.recipientRole || (Array.isArray(event.recipientRole) ? event.recipientRole.includes(currentPlayer.persona) : event.recipientRole === currentPlayer.persona) )
-                            }
-                          />
-                        ))}
+                    <CardContent className="h-full overflow-auto">
+                      <div className="space-y-4">
+                        {personaEvents.map((event: any) => {
+                          const isLast = personaEvents[personaEvents.length - 1]?.id === event.id;
+                          const showCountdown = isAdvancing && !waitingEventId && isLast;
+                          return (
+                            <TimelineEvent
+                              key={event.id}
+                              {...event}
+                              targetPersonas={event.recipientRole ? (Array.isArray(event.recipientRole) ? event.recipientRole : [event.recipientRole]) : []}
+                              isVisible={true}
+                              onDecision={handleEventDecision}
+                              resolution={resolvedEvents[event.id] || event.resolution}
+                              allowDecision={
+                                event.eventType === 'decision_point' && waitingEventId === event.id && currentPlayer && (
+                                  !event.recipientRole || (Array.isArray(event.recipientRole)
+                                    ? event.recipientRole.some((r: any) => normalizeRole(r) === normalizeRole(currentPlayer.persona))
+                                    : normalizeRole(event.recipientRole) === normalizeRole(currentPlayer.persona))
+                                )
+                              }
+                              nextInSeconds={ showCountdown ? nextDelayRemaining : undefined }
+                              nextDelayTotal={ADVANCE_DELAY_SECONDS }
+                              onAcknowledge={ showCountdown ? acknowledgeDelay : undefined }
+                            />
+                          );
+                        })}
                         {personaEvents.length === 0 && (
                           <div className="text-center p-8 text-muted-foreground"><p className="font-mono">No specific events for {currentPlayer.persona.replace('_', ' ')} role yet.</p><p className="text-sm mt-2">Events will appear as the simulation progresses...</p></div>
                         )}
