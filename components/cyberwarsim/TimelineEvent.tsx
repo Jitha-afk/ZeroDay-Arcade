@@ -168,6 +168,18 @@ export default function TimelineEvent({
           </div>
         </div>
       )}
+      {eventType === 'ending' && (
+        <div className="mt-4">
+          <Button
+            size="sm"
+            className="w-full font-mono"
+            variant="secondary"
+            onClick={() => { /* Placeholder for PDF generation */ console.log('Download Debriefing Doc clicked for', id); }}
+          >
+            Download Debriefing Doc
+          </Button>
+        </div>
+      )}
     </div>
   );
 }
