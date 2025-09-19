@@ -120,7 +120,7 @@ export default function PlayerEntry({ onEnterGame, assignedPlayers = [] }: Playe
                         <User className="w-5 h-5 text-primary" />
                         <h3 className="font-mono font-semibold">{player.name}</h3>
                       </div>
-                      <span className={`text-xs px-2 py-1 rounded ${selectedPlayer === player.id ? 'bg-slate-100' : 'bg-gray-100'}`}>
+                      <span className={`text-xs px-2 py-1 rounded ${selectedPlayer === player.id ? 'bg-slate-100' : 'bg-gray-100'} text-black`}>
                         {player.persona.replace('_', ' ')}
                       </span>
                     </div>
