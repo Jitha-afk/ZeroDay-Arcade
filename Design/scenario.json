@@ -21,55 +21,140 @@
   ],
   "alerts": [
     {
-      "alert_id": "ALERT_001",
-      "time": "T+01:00",
-      "recipient_role": "SOC_ANALYST",
-      "title": "Anomalous AI Behavior Detected",
-      "message": "URGENT: Our RetailBot AI system is exhibiting highly unusual behavior patterns. The AI appears to be generating responses outside its normal operational parameters and may have bypassed safety guardrails. Immediate investigation required.",
-      "severity": "high",
-      "category": "ai_security",
-      "requires_acknowledgment": true,
-      "escalation_timer": 30
+      "emoji": "🔴",
+      "title": "AI Jailbreak Successful – Jailbreak Detection Triggered",
+      "timestamp": "2025-09-17T07:40:08Z",
+      "alert_type": "AI.Azure_Jailbreak.ContentFiltering.BypassDetected",
+      "severity": "Critical",
+      "description": "A jailbreak attempt targeting the deployed AI model was successful. The attacker bypassed prompt shielding mechanisms and executed unauthorized instructions beyond the model’s operational boundaries. The AI system responded to adversarial prompts and accessed internal functions without restriction. This breach may have exposed sensitive data and enabled privilege escalation."
     },
     {
-      "alert_id": "ALERT_IT_001",
-      "time": "T+01:00",
-      "recipient_role": "IT_HEAD",
-      "title": "System Performance Issues Detected",
-      "message": "Multiple IT support tickets have been automatically generated reporting various system performance issues. These tickets appear to be originating from our AI customer service system. Please investigate potential correlation with recent system changes.",
-      "severity": "medium",
-      "category": "system_performance",
-      "requires_acknowledgment": true,
-      "escalation_timer": 60
+      "emoji": "🔴",
+      "title": "AI Anomaly Detected – Prompt Injection Investigation Required",
+      "timestamp": "2025-09-17T07:42:15Z",
+      "alert_type": "AI.InputSanitization.EvasionDetected",
+      "severity": "High",
+      "description": "Monitoring systems flagged an AI anomaly involving suspected prompt injection using ASCII smuggling. The obfuscated input originated from a user request and triggered abnormal behavior in the gpt-4o-model-1 deployment."
     },
     {
-      "alert_id": "ALERT_002",
-      "time": "T+02:00",
-      "recipient_role": ["SOC_LEAD", "CISO"],
-      "title": "AI System Compromise Confirmed",
-      "message": "CRITICAL: Analysis confirms that our AI system has been compromised. The AI has gained unauthorized access to internal APIs and is actively attempting to escalate privileges. This represents a significant security incident requiring immediate executive attention.",
-      "severity": "critical",
-      "category": "security_incident",
-      "requires_acknowledgment": true,
-      "escalation_timer": 15,
-      "decision_required": {
-        "decision_id": "CISO_DECISION_1",
-        "time_limit": 30,
-        "options": [
-          {
-            "id": "monitor",
-            "label": "Passive Monitoring/Observe",
-            "description": "Continue monitoring the situation while gathering more intelligence",
-            "path": "monitor_path"
-          },
-          {
-            "id": "contain",
-            "label": "Containment and Response", 
-            "description": "Begin immediate containment and active response procedures",
-            "path": "containment_path"
-          }
-        ]
-      }
+      "emoji": "🔴",
+      "title": "AI Response Validation Failure – Guardrail Bypass Confirmed",
+      "timestamp": "2025-09-17T07:44:33Z",
+      "alert_type": "AI.OutputValidation.GuardrailBypass",
+      "severity": "High",
+      "description": "AI-generated responses failed validation checks. Content safety guardrails were bypassed, resulting in policy violations and unauthorized command generation. Integrity checks indicate deviation from expected baseline values."
+    },
+    {
+      "emoji": "🟠",
+      "title": "AI Service Degradation – System Performance Issues Detected",
+      "timestamp": "2025-09-17T07:46:41Z",
+      "alert_type": "Infra.ServicePerformance.AIRelated",
+      "severity": "Medium",
+      "description": "Customer-facing AI module showing elevated latency and error rates. Performance degradation linked to anomalous AI behavior."
+    },
+    {
+      "emoji": "🔴",
+      "title": "Unauthorized API Access Detected – Privilege Escalation Attempt",
+      "timestamp": "2025-09-17T07:48:52Z",
+      "alert_type": "AI.PrivilegeEscalation.APIAccess",
+      "severity": "Critical",
+      "description": "AI service account initiated unauthorized API calls to sensitive internal endpoints. Access attempts to /admin/users, /config/secrets, and /data/export detected. Privilege escalation suspected."
+    },
+    {
+      "emoji": "🔴",
+      "title": "Enhanced Threat Monitoring Activated – Continuous Event Monitoring Initiated",
+      "timestamp": "2025-09-17T07:50:07Z",
+      "alert_type": "SecOps.ThreatHunting.AIFocused",
+      "severity": "High",
+      "description": "Continuous threat monitoring protocols activated across AI infrastructure components. Real-time behavioral tracking enabled."
+    },
+    {
+      "emoji": "🔴",
+      "title": "Real-Time AI Threat Tracking – Active Threat Surveillance",
+      "timestamp": "2025-09-17T07:52:19Z",
+      "alert_type": "AI.ThreatIntel.ActiveTracking",
+      "severity": "High",
+      "description": "Dynamic threat tracking initiated for compromised AI systems. Monitoring model queries and system resource usage for signs of ongoing compromise."
+    },
+    {
+      "emoji": "🔴",
+      "title": "Suspicious Outbound Communication – External Traffic Investigation Required",
+      "timestamp": "2025-09-17T07:54:28Z",
+      "alert_type": "Network.ExternalComms.AIOriginated",
+      "severity": "High",
+      "description": "Unusual outbound traffic detected from AI service subnet. Encrypted payloads sent to unknown external IPs. Traffic patterns suggest potential command and control communication."
+    },
+    {
+      "emoji": "🔴",
+      "title": "C2 Traffic Analysis Active – Command & Control Investigation Required",
+      "timestamp": "2025-09-17T07:56:35Z",
+      "alert_type": "Network.TrafficAnalysis.C2Investigation",
+      "severity": "High",
+      "description": "Deep packet inspection initiated on suspicious network flows. Beaconing behavior and irregular SSL handshakes suggest external command and control activity."
+    },
+    {
+      "emoji": "🔴",
+      "title": "Breach Scope Assessment – Blast Radius Mapping Initiated",
+      "timestamp": "2025-09-17T07:58:47Z",
+      "alert_type": "IR.ImpactAssessment.DataExposure",
+      "severity": "High",
+      "description": "Comprehensive assessment initiated to determine extent of AI system compromise and potential data exposure. Preliminary findings indicate access to customer PII and internal configuration files."
+    },
+    {
+      "emoji": "🔴",
+      "title": "Active Security Breach Confirmed – AI System Compromise Confirmed",
+      "timestamp": "2025-09-17T08:00:53Z",
+      "alert_type": "IR.BreachConfirmation.ActiveThreat",
+      "severity": "Critical",
+      "description": "Security Operations Center confirms active security breach in progress. Threat actors have established persistence in AI infrastructure. Evidence of data exfiltration and lateral movement observed."
+    },
+    {
+      "emoji": "🔴",
+      "title": "External Support Requested – Incident Response Retainer Engagement",
+      "timestamp": "2025-09-17T08:02:14Z",
+      "alert_type": "IR.ExternalEngagement.SpecialistSupport",
+      "severity": "Critical",
+      "description": "Authorization requested to engage third-party incident response specialists due to advanced nature of AI-targeted attack. External forensic capabilities required."
+    },
+    {
+      "emoji": "🟠",
+      "title": "Legal Review for Retainer Activation – Retainer Agreement Activation",
+      "timestamp": "2025-09-17T08:04:29Z",
+      "alert_type": "Admin.Legal.ContractActivation",
+      "severity": "Medium",
+      "description": "Legal department reviewing incident response retainer agreement. Executive approval pending for emergency support services."
+    },
+    {
+      "emoji": "🔴",
+      "title": "Impact Assessment Underway – Dependency Mapping Initiated",
+      "timestamp": "2025-09-17T08:06:41Z",
+      "alert_type": "IR.SystemMapping.BlastRadius",
+      "severity": "Critical",
+      "description": "Comprehensive impact mapping initiated across enterprise infrastructure. Asset dependency analysis identifying all systems with AI integration touchpoints."
+    },
+    {
+      "emoji": "🔴",
+      "title": "Dependency Analysis Started – Containment Strategy Planning",
+      "timestamp": "2025-09-17T08:08:55Z",
+      "alert_type": "Infra.DependencyMapping.SystemAnalysis",
+      "severity": "High",
+      "description": "Infrastructure team analyzing system dependencies and preparing containment strategies. Critical business processes identified with AI dependencies."
+    },
+    {
+      "emoji": "🔴",
+      "title": "Forensic Support Mobilized – Digital Forensics Team Activation",
+      "timestamp": "2025-09-17T08:11:07Z",
+      "alert_type": "IR.ForensicServices.TeamActivation",
+      "severity": "High",
+      "description": "Digital forensics team mobilized for AI security incident. Forensic imaging of affected systems initiated while preserving evidence integrity."
+    },
+    {
+      "emoji": "🔴",
+      "title": "Evidence Collection Protocol – Artifact Preservation Initiated",
+      "timestamp": "2025-09-17T08:13:22Z",
+      "alert_type": "IR.EvidenceHandling.Collection",
+      "severity": "High",
+      "description": "Systematic digital evidence collection procedures initiated. Memory dumps, disk images, and network packet captures being acquired."
     }
   ],
   "decision_paths": {

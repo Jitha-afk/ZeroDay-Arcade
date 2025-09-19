@@ -9,6 +9,8 @@ interface TimelineEventProps {
   description: string;
   eventType: string;
   severity: string;
+  alertType?: string | null;
+  emoji?: string | null;
   scheduledTime: number;
   isTriggered?: boolean;
   targetPersonas?: string[];
@@ -28,6 +30,8 @@ export default function TimelineEvent({
   description,
   eventType,
   severity,
+  alertType = null,
+  emoji = null,
   scheduledTime,
   isTriggered = false,
   targetPersonas = [],
@@ -58,8 +62,14 @@ export default function TimelineEvent({
   return (
     <div className={`p-4 border rounded ${isTriggered ? 'bg-card' : 'bg-muted/10'} relative`}>
       <div className="flex items-center justify-between mb-2">
-        <h4 className="font-mono font-semibold">{title}</h4>
-        <span className="text-xs text-muted-foreground">{severity.toUpperCase()}</span>
+        <div className="flex items-center gap-3">
+          {emoji ? <div className="text-2xl leading-none">{emoji}</div> : null}
+          <h4 className="font-mono font-semibold">{title}</h4>
+        </div>
+        <div className="flex items-center gap-2">
+          {alertType ? <span className="text-xs font-mono text-foreground px-2 py-1 border rounded">{alertType}</span> : null}
+          <span className="text-xs text-muted-foreground">{severity.toUpperCase()}</span>
+        </div>
       </div>
       <p className="text-sm text-muted-foreground mb-3">{description}</p>
 
