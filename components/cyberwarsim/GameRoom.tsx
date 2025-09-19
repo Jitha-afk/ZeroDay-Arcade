@@ -10,6 +10,7 @@ import ChatInterface from "./ChatInterface";
 import TimelineEvent from "./TimelineEvent";
 import PersonaCard from "./PersonaCard";
 import GameTimer from "./GameTimer";
+import MoneyIndicator from "./MoneyIndicator";
 import { Users, Clock, Activity, Award, Shield } from "lucide-react";
 
 const backgroundImage = '/image.png';
@@ -566,6 +567,7 @@ export default function GameRoom({ currentPlayer: propPlayer, onLeaveGame }: Gam
           <div className="grid grid-cols-12 gap-6 h-[calc(100vh-140px)]">
             <div className="col-span-3 space-y-4">
               <GameTimer duration={600} phase={"simulation"} onPhaseComplete={() => {}} />
+              <MoneyIndicator totalDuration={600} startingAmount={10000} />
 
               <Card data-testid="card-session-info">
                 <CardHeader className="pb-3">
