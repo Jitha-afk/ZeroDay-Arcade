@@ -10,6 +10,7 @@ import ChatInterface from "./ChatInterface";
 import TimelineEvent from "./TimelineEvent";
 import PersonaCard from "./PersonaCard";
 import GameTimer from "./GameTimer";
+import MoneyIndicator from "./MoneyIndicator";
 import { Users, Clock, Activity, Award, Shield } from "lucide-react";
 
 const backgroundImage = '/image.png';
@@ -86,8 +87,6 @@ export default function GameRoom({ currentPlayer: propPlayer, onLeaveGame }: Gam
                     eventType: ev.decision_required ? 'decision_point' : 'alert',
                     severity: ev.severity || 'medium',
                     scheduledTime: parseTimeStringToSeconds(ev.time) || 0,
-                    alertType: ev.alert_type || ev.category || null,
-                    emoji: ev.emoji || ev.emote || null,
                     isTriggered: !!ev.automatic || false,
                     options: ev.decision_required?.options?.map((o: any) => ({ id: o.id, label: o.label, description: o.description, path: o.path })) || [],
                     recipientRole: ev.recipient_role || ev.recipientRole || null,
@@ -120,8 +119,6 @@ export default function GameRoom({ currentPlayer: propPlayer, onLeaveGame }: Gam
                   eventType: alert.decision_required ? 'decision_point' : 'alert',
                   severity: alert.severity || 'medium',
                   scheduledTime: parseTimeStringToSeconds(alert.time) || 0,
-                  alertType: alert.alert_type || alert.category || null,
-                  emoji: alert.emoji || alert.emote || null,
                   isTriggered: !!alert.automatic || false,
                   options: alert.decision_required?.options?.map((o: any) => ({ id: o.id, label: o.label, description: o.description, path: o.path })) || [],
                   recipientRole: alert.recipient_role || alert.recipientRole || null,
@@ -200,7 +197,6 @@ export default function GameRoom({ currentPlayer: propPlayer, onLeaveGame }: Gam
                   eventType: alert.decision_required ? 'decision_point' : 'alert',
                   severity: alert.severity || 'medium',
                   scheduledTime: parseTimeStringToSeconds(alert.time) || 0,
-                  alertType: alert.alert_type || alert.category || null,
                   isTriggered: !!alert.automatic || false,
                   options: alert.decision_required?.options?.map((o: any) => ({ id: o.id, label: o.label, description: o.description, path: o.path })) || [],
                   recipientRole: alert.recipient_role || alert.recipientRole || null,
@@ -416,8 +412,6 @@ export default function GameRoom({ currentPlayer: propPlayer, onLeaveGame }: Gam
         eventType: alert.decision_required ? 'decision_point' : 'alert',
         severity: alert.severity || 'medium',
         scheduledTime: parseTimeStringToSeconds(alert.time) || 0,
-        alertType: alert.alert_type || alert.category || null,
-        emoji: alert.emoji || alert.emote || null,
         isTriggered: !!alert.automatic || false,
         options: alert.decision_required?.options?.map((o: any) => ({ id: o.id, label: o.label, description: o.description, path: o.path })) || [],
         recipientRole: alert.recipient_role || alert.recipientRole || null,
@@ -572,7 +566,8 @@ export default function GameRoom({ currentPlayer: propPlayer, onLeaveGame }: Gam
         <div className="max-w-7xl mx-auto p-6">
           <div className="grid grid-cols-12 gap-6 h-[calc(100vh-140px)]">
             <div className="col-span-3 space-y-4">
-              <GameTimer duration={2700} phase={"simulation"} onPhaseComplete={() => {}} />
+              <GameTimer duration={600} phase={"simulation"} onPhaseComplete={() => {}} />
+              <MoneyIndicator totalDuration={600} startingAmount={10000} />
 
               <Card data-testid="card-session-info">
                 <CardHeader className="pb-3">

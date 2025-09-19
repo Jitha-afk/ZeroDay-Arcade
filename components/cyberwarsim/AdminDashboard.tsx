@@ -107,7 +107,7 @@ export default function AdminDashboard({ onStartGame, initialPlayers = [], initi
                 </div>
                 <div className="flex items-center justify-between text-sm">
                   <span>Duration:</span>
-                  <span className="px-2 py-1 border rounded-md text-xs">45 min + 10 min debrief</span>
+                  <span className="px-2 py-1 border rounded-md text-xs">10 min session + optional debrief</span>
                 </div>
                 <div className="flex items-center justify-between text-sm">
                   <span>Scenario:</span>

@@ -1,11 +1,22 @@
 "use client";
 
 import { useRouter } from 'next/navigation';
+import { useEffect } from 'react';
 import GameRoom from '../../../components/cyberwarsim/GameRoom';
 import { Button } from '../../../components/ui/button';
 
 export default function Page() {
   const router = useRouter();
+  useEffect(() => {
+    try {
+      const acknowledged = typeof window !== 'undefined' && localStorage.getItem('briefingAcknowledged') === 'true';
+      if (!acknowledged) {
+        router.replace('/cyberwarsim/join/briefing');
+      }
+    } catch (e) {
+      // ignore
+    }
+  }, [router]);
   return (
     <main className="min-h-screen w-full">
       <div className="p-6">
