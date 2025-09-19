@@ -17,67 +17,8 @@ A **web-based multiplayer cyber war game simulation platform** where corporate t
 
 ---
 
-## 3. Functional Requirements
+#C:\temp\Zero Day Arcade-Cyber WarGame\ZeroDay-Arcade\Design
 
-### 3.1 User Roles
-- **Admin**
-  - Create/manage sessions.
-  - Assign usernames and roles.
-  - Upload JSON scenario files.
-  - Launch and monitor sessions.
-- **Players (Roles: CISO, PR Head, Legal Head, SOC Lead, SOC Analyst, IT Head)**
-  - Login to role-specific dashboard.
-  - View timeline events.
-  - Respond to decision points with pre-defined choices.
-  - Communicate with team (role-based comms feed).
-  - Monitor team overview and scenario progress.
-
----
-
-### 3.2 Game Mechanics
-- **Session Setup**
-  - Admin inputs scenario JSON.
-  - JSON defines timeline events, alerts, decisions, communications.
-  - Fixed AI Breach scenario available by default.
-- **Timer**
-  - Central countdown clock (15 minutes).
-  - Visible across all player dashboards.
-- **Timeline View**
-  - Sequential alerts/events injected as per JSON timestamps.
-  - Alerts categorized: Critical, Warning, Informational.
-  - Events trigger decision points with pre-set radio button choices.
-- **Decision System**
-  - Each decision stored in session log.
-  - Good decisions → reward points.
-  - No penalty for poor decisions.
-- **Communications View**
-  - Role-specific communication feed.
-  - Messages from AI-driven or player-driven teammates.
-- **Team Overview**
-  - Tile view of roles and player assignments.
-  - Left sidebar with:
-    - Session info (breach name, timer).
-    - Progress of breach (environment impact).
-    - Number of assets affected (auto-updating).
-    - Decisions log (good vs. bad).
-- **Tension & Engagement**
-  - Animated alerts (flashing, pulsing colors). Should not give look and feel of AI generated content.
-  - Escalating background sounds or effects.
-  - Role interactions dynamically displayed.
-
----
-
-### 3.3 Endgame & Debrief
-- **Game Ends**
-  - When timer completes or breach scenario concludes.
-- **Debrief Report**
-  - Timeline of events and player decisions.
-  - Scorecard of rewards.
-  - "What went well" vs "Areas of improvement."
-  - How Microsoft Security Stack tools could have mitigated each stage.
-  - PDF/HTML export option for stakeholders.
-
----
 
 ### 3.4 Advanced Features
 - **Multiple Scenarios**
