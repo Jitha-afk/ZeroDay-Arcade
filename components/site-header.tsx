@@ -7,12 +7,11 @@ import { HamburgerMenuIcon } from '@radix-ui/react-icons';
 import { usePathname } from 'next/navigation';
 import { cn } from '@/lib/utils';
 
+// TODO: don't show this on the cyberwarsim page
 const navItems = [
-  { href: '#scenarios', label: 'Scenarios' },
+  { href: '#team-section', label: 'Team' },
   { href: '#features', label: 'Features' },
-  { href: '#leagues', label: 'Leagues' },
-  { href: '#team', label: 'Team' },
-  { href: '#contact', label: 'Contact' },
+  { href: '#contact-section', label: 'Contact' },
 ];
 
 export function SiteHeader() {
@@ -27,7 +26,7 @@ export function SiteHeader() {
           </Link>
         </div>
         {/* Center: Primary Nav (desktop) */}
-        <nav className="hidden flex-1 justify-center md:flex">
+        <nav className="hidden flex-1 justify-end md:flex">
           <ul className="flex items-center gap-6 text-sm font-medium">
             {navItems.map(item => (
               <li key={item.href}>
@@ -44,11 +43,6 @@ export function SiteHeader() {
             ))}
           </ul>
         </nav>
-        {/* Right: CTAs */}
-        <div className="hidden flex-1 items-center justify-end gap-3 md:flex">
-          <Button variant="secondary" size="sm">Login</Button>
-          <Button size="sm">Join Up</Button>
-        </div>
         {/* Mobile Menu */}
         <div className="flex items-center md:hidden">
           <Sheet>
