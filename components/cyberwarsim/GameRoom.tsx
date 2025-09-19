@@ -565,7 +565,7 @@ export default function GameRoom({ currentPlayer: propPlayer, onLeaveGame }: Gam
         <div className="max-w-7xl mx-auto p-6">
           <div className="grid grid-cols-12 gap-6 h-[calc(100vh-140px)]">
             <div className="col-span-3 space-y-4">
-              <GameTimer duration={2700} phase={"simulation"} onPhaseComplete={() => {}} />
+              <GameTimer duration={600} phase={"simulation"} onPhaseComplete={() => {}} />
 
               <Card data-testid="card-session-info">
                 <CardHeader className="pb-3">

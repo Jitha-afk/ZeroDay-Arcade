@@ -83,7 +83,7 @@ export default function PlayerEntry({ onEnterGame, assignedPlayers = [] }: Playe
             <div className="space-y-2">
               <h2 className="text-xl font-mono text-foreground">SELECT YOUR IDENTITY</h2>
               <p className="text-muted-foreground font-mono text-sm">
-                // AI-Related Data Breach Scenario - 45 Minutes Active Simulation
+                // AI-Related Data Breach Scenario - 10 Minute Active Simulation
               </p>
             </div>
           </div>
